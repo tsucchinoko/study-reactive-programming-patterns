@@ -8,6 +8,7 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
 	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
@@ -50,7 +51,7 @@ func (r *mutationResolver) PlaceOrder(ctx context.Context, input generated.Place
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrder(order), nil
+	return ToGQLOrder(order), nil
 }
 
 // ConfirmOrder is the resolver for the confirmOrder field.
@@ -63,7 +64,7 @@ func (r *mutationResolver) ConfirmOrder(ctx context.Context, orderID string) (*g
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrder(order), nil
+	return ToGQLOrder(order), nil
 }
 
 // CancelOrder is the resolver for the cancelOrder field.
@@ -79,7 +80,7 @@ func (r *mutationResolver) CancelOrder(ctx context.Context, orderID string, reas
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrder(order), nil
+	return ToGQLOrder(order), nil
 }
 
 // TransitionOrder is the resolver for the transitionOrder field.
@@ -95,7 +96,7 @@ func (r *mutationResolver) TransitionOrder(ctx context.Context, orderID string, 
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrder(order), nil
+	return ToGQLOrder(order), nil
 }
 
 // Order is the resolver for the order field.
@@ -108,7 +109,7 @@ func (r *queryResolver) Order(ctx context.Context, id string) (*generated.Order,
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrder(order), nil
+	return ToGQLOrder(order), nil
 }
 
 // Orders is the resolver for the orders field.
@@ -124,7 +125,7 @@ func (r *queryResolver) Orders(ctx context.Context, limit *int, offset *int) ([]
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrders(orders), nil
+	return ToGQLOrders(orders), nil
 }
 
 // OrdersByStatus is the resolver for the ordersByStatus field.
@@ -133,7 +134,7 @@ func (r *queryResolver) OrdersByStatus(ctx context.Context, status generated.Ord
 	if err != nil {
 		return nil, err
 	}
-	return toGQLOrders(orders), nil
+	return ToGQLOrders(orders), nil
 }
 
 // Restaurant is the resolver for the restaurant field.
@@ -160,8 +161,16 @@ func (r *queryResolver) Restaurants(ctx context.Context) ([]*generated.Restauran
 
 // OrderStatusChanged is the resolver for the orderStatusChanged field.
 func (r *subscriptionResolver) OrderStatusChanged(ctx context.Context, orderID string) (<-chan *generated.Order, error) {
-	// Phase 2: Will be implemented with in-memory pub/sub, then Redis in Phase 3
-	return nil, fmt.Errorf("subscriptions will be implemented in Phase 2")
+	subscriberID := fmt.Sprintf("sub-%s-%d", orderID, time.Now().UnixNano())
+	ch, unsubscribe := r.SubscriptionMgr.Subscribe(orderID, subscriberID)
+
+	// Clean up when client disconnects.
+	go func() {
+		<-ctx.Done()
+		unsubscribe()
+	}()
+
+	return ch, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

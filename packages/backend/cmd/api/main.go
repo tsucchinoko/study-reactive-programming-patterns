@@ -16,6 +16,7 @@ import (
 	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
 	restaurantinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/infrastructure"
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
+	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
 func main() {
@@ -34,6 +35,9 @@ func main() {
 	// Set up event bus (in-memory for Phase 1)
 	bus := events.NewInMemoryBus()
 
+	// Set up subscription manager for GraphQL Subscriptions
+	subMgr := gql.NewSubscriptionManager()
+
 	// Set up repositories
 	orderRepo := orderinfra.NewPostgresOrderRepository(pool)
 	restaurantRepo := restaurantinfra.NewPostgresRestaurantRepository(pool)
@@ -42,10 +46,31 @@ func main() {
 	orderService := orderapp.NewOrderService(orderRepo, bus.Publish)
 	restaurantService := restaurantapp.NewRestaurantService(restaurantRepo)
 
+	// Wire event bus → subscription manager.
+	// When any order event fires, re-fetch the order and notify subscribers.
+	orderTopics := []string{"order.placed", "order.confirmed", "order.status_changed", "order.cancelled"}
+	for _, topic := range orderTopics {
+		bus.Subscribe(ctx, topic, func(event events.DomainEvent) error {
+			orderID, err := types.ParseOrderID(event.AggregateID())
+			if err != nil {
+				log.Printf("[subscription] invalid order ID in event: %v", err)
+				return nil
+			}
+			order, err := orderService.GetOrder(ctx, orderapp.GetOrderQuery{OrderID: orderID})
+			if err != nil {
+				log.Printf("[subscription] failed to fetch order %s: %v", event.AggregateID(), err)
+				return nil
+			}
+			subMgr.Notify(event.AggregateID(), gql.ToGQLOrder(order))
+			return nil
+		})
+	}
+
 	// Set up GraphQL
 	resolver := &gql.Resolver{
 		OrderService:      orderService,
 		RestaurantService: restaurantService,
+		SubscriptionMgr:   subMgr,
 	}
 
 	mux := http.NewServeMux()
