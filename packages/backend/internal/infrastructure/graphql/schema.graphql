@@ -1,0 +1,116 @@
+scalar DateTime
+
+# --- Order types ---
+
+enum OrderStatus {
+  CREATED
+  CONFIRMED
+  PREPARING
+  READY
+  PICKED_UP
+  DELIVERING
+  DELIVERED
+  CANCELLED
+}
+
+type Money {
+  amount: Int!
+  currency: String!
+  display: String!
+}
+
+type OrderItem {
+  menuItemId: ID!
+  name: String!
+  quantity: Int!
+  unitPrice: Money!
+  specialInstructions: String!
+  subtotal: Money!
+}
+
+type Order {
+  id: ID!
+  customerId: ID!
+  restaurantId: ID!
+  restaurant: Restaurant
+  items: [OrderItem!]!
+  status: OrderStatus!
+  total: Money!
+  placedAt: DateTime!
+  confirmedAt: DateTime
+  deliveredAt: DateTime
+  cancelledAt: DateTime
+  cancelReason: String
+}
+
+# --- Restaurant types ---
+
+type Location {
+  lat: Float!
+  lng: Float!
+  address: String!
+}
+
+type MenuItem {
+  id: ID!
+  name: String!
+  category: String!
+  price: Money!
+  prepTimeSec: Int!
+  available: Boolean!
+}
+
+type Menu {
+  id: ID!
+  items: [MenuItem!]!
+}
+
+type Restaurant {
+  id: ID!
+  name: String!
+  cuisine: String!
+  location: Location!
+  menu: Menu!
+  isOpen: Boolean!
+}
+
+# --- Inputs ---
+
+input PlaceOrderItemInput {
+  menuItemId: ID!
+  name: String!
+  quantity: Int!
+  unitPrice: Int!
+  specialInstructions: String
+}
+
+input PlaceOrderInput {
+  customerId: ID!
+  restaurantId: ID!
+  items: [PlaceOrderItemInput!]!
+}
+
+# --- Queries ---
+
+type Query {
+  order(id: ID!): Order
+  orders(limit: Int = 20, offset: Int = 0): [Order!]!
+  ordersByStatus(status: OrderStatus!): [Order!]!
+  restaurant(id: ID!): Restaurant
+  restaurants: [Restaurant!]!
+}
+
+# --- Mutations ---
+
+type Mutation {
+  placeOrder(input: PlaceOrderInput!): Order!
+  confirmOrder(orderId: ID!): Order!
+  cancelOrder(orderId: ID!, reason: String!): Order!
+  transitionOrder(orderId: ID!, newStatus: OrderStatus!): Order!
+}
+
+# --- Subscriptions (Phase 2) ---
+
+type Subscription {
+  orderStatusChanged(orderId: ID!): Order!
+}
