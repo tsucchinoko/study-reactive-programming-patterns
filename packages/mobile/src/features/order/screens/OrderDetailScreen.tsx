@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   orderId: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#1F2937",
     flex: 1,
   },
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   liveText: {
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#EF4444",
   },
   section: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#374151",
     marginBottom: 12,
   },
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   },
   itemPrice: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: "#1F2937",
   },
   totalRow: {
@@ -200,12 +200,12 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#374151",
   },
   totalValue: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#1F2937",
   },
   cancelReason: {

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#1F2937",
   },
   statusDot: {

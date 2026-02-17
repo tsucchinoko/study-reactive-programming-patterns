@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   orderId: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#1F2937",
   },
   items: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   total: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#1F2937",
   },
 });

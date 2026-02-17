@@ -35,7 +35,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: "#fff" },
-        headerTitleStyle: { fontWeight: "700" },
+        headerTitleStyle: { fontWeight: "bold" },
         tabBarActiveTintColor: "#3B82F6",
         tabBarInactiveTintColor: "#9CA3AF",
       }}
@@ -45,9 +45,7 @@ function TabNavigator() {
         component={OrderListScreen}
         options={{
           title: "注文一覧",
-          tabBarIcon: ({ focused }) => (
-            <TabIcon label="📋" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon label="📋" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -55,9 +53,7 @@ function TabNavigator() {
         component={RestaurantListScreen}
         options={{
           title: "レストラン",
-          tabBarIcon: ({ focused }) => (
-            <TabIcon label="🍽" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon label="🍽" focused={focused} />,
         }}
       />
     </Tab.Navigator>

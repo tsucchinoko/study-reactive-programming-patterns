@@ -40,7 +40,9 @@ export function StatusTimeline({ currentStatus }: Props) {
     );
   }
 
-  const currentIdx = STATUSES.indexOf(currentStatus as (typeof STATUSES)[number]);
+  const currentIdx = STATUSES.indexOf(
+    currentStatus as (typeof STATUSES)[number],
+  );
 
   return (
     <View style={styles.container}>
@@ -59,9 +61,7 @@ export function StatusTimeline({ currentStatus }: Props) {
                 ]}
               />
               {idx < STATUSES.length - 1 && (
-                <View
-                  style={[styles.line, isPast && styles.lineActive]}
-                />
+                <View style={[styles.line, isPast && styles.lineActive]} />
               )}
             </View>
             <Text
@@ -134,11 +134,11 @@ const styles = StyleSheet.create({
     color: "#374151",
   },
   labelCurrent: {
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#3B82F6",
   },
   labelCancelled: {
-    fontWeight: "700",
+    fontWeight: "bold",
     color: "#EF4444",
     marginLeft: 12,
     fontSize: 14,
