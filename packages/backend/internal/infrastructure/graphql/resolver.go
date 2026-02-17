@@ -9,4 +9,5 @@ import (
 type Resolver struct {
 	OrderService      *orderapp.OrderService
 	RestaurantService *restaurantapp.RestaurantService
+	SubscriptionMgr   *SubscriptionManager
 }

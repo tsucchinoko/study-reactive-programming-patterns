@@ -12,7 +12,8 @@ import (
 
 // --- Order mapping (domain → GraphQL) ---
 
-func toGQLOrder(o orderdomain.Order) *generated.Order {
+// ToGQLOrder converts a domain Order to a GraphQL Order.
+func ToGQLOrder(o orderdomain.Order) *generated.Order {
 	return &generated.Order{
 		ID:           o.ID().String(),
 		CustomerID:   o.CustomerID().String(),
@@ -39,9 +40,9 @@ func toGQLOrderItem(i orderdomain.OrderItem) *generated.OrderItem {
 	}
 }
 
-func toGQLOrders(orders []orderdomain.Order) []*generated.Order {
+func ToGQLOrders(orders []orderdomain.Order) []*generated.Order {
 	return fp.Map(orders, func(o orderdomain.Order) *generated.Order {
-		return toGQLOrder(o)
+		return ToGQLOrder(o)
 	})
 }
 
