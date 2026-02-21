@@ -10,13 +10,13 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// Menu is an aggregate that belongs to a Restaurant.
+// Menu はレストランに属する集約を表す。
 type Menu struct {
 	id    types.MenuID
 	items []MenuItem
 }
 
-// NewMenu creates a new Menu.
+// NewMenu は新しい Menu を作成する。
 func NewMenu(id types.MenuID, items []MenuItem) Menu {
 	copied := make([]MenuItem, len(items))
 	copy(copied, items)
@@ -30,7 +30,7 @@ func (m Menu) Items() []MenuItem {
 	return copied
 }
 
-// FindItem returns the MenuItem with the given ID.
+// FindItem は指定された ID を持つ MenuItem を返す。
 func (m Menu) FindItem(itemID types.MenuItemID) option.Option[MenuItem] {
 	item, found := fp.Find(m.items, func(mi MenuItem) bool {
 		return mi.ID().String() == itemID.String()
@@ -41,16 +41,15 @@ func (m Menu) FindItem(itemID types.MenuItemID) option.Option[MenuItem] {
 	return option.Some(item)
 }
 
-// AvailableItems returns only items that are currently available. Pure function.
+// AvailableItems は現在注文可能な商品のみを返す。純粋関数。
 func (m Menu) AvailableItems() []MenuItem {
 	return fp.Filter(m.items, func(mi MenuItem) bool {
 		return mi.Available()
 	})
 }
 
-// EstimatePreparationTime estimates total prep time for a set of items.
-// Uses the maximum prep time among all items (parallel preparation).
-// Pure function.
+// EstimatePreparationTime は指定された商品セットの合計調理時間を見積もる。
+// 全商品を並行して調理すると想定し、最大の調理時間を返す。純粋関数。
 func EstimatePreparationTime(items []MenuItem) time.Duration {
 	if len(items) == 0 {
 		return 0
@@ -63,8 +62,7 @@ func EstimatePreparationTime(items []MenuItem) time.Duration {
 	})
 }
 
-// ValidateMenuItems checks that all requested item IDs exist and are available.
-// Pure function.
+// ValidateMenuItems は要求された全商品 ID が存在し、注文可能であることを検証する。純粋関数。
 func ValidateMenuItems(menu Menu, itemIDs []types.MenuItemID) result.Result[[]MenuItem] {
 	var found []MenuItem
 	for _, id := range itemIDs {

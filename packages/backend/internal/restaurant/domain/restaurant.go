@@ -7,7 +7,7 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// CuisineType represents the type of cuisine a restaurant serves.
+// CuisineType はレストランが提供する料理の種類を表す。
 type CuisineType string
 
 const (
@@ -23,14 +23,14 @@ const (
 	CuisineOther    CuisineType = "OTHER"
 )
 
-// Location is a value object representing a geographic position.
+// Location は地理的な位置を表す値オブジェクト。
 type Location struct {
 	lat     float64
 	lng     float64
 	address string
 }
 
-// NewLocation creates a Location value object.
+// NewLocation は Location 値オブジェクトを作成する。
 func NewLocation(lat, lng float64, address string) Location {
 	return Location{lat: lat, lng: lng, address: address}
 }
@@ -39,7 +39,7 @@ func (l Location) Lat() float64    { return l.lat }
 func (l Location) Lng() float64    { return l.lng }
 func (l Location) Address() string { return l.address }
 
-// Restaurant is the aggregate root for the Restaurant bounded context.
+// Restaurant はレストランの境界付けられたコンテキストにおける集約ルート。
 type Restaurant struct {
 	id       types.RestaurantID
 	name     string
@@ -49,7 +49,7 @@ type Restaurant struct {
 	isOpen   bool
 }
 
-// NewRestaurant creates a new Restaurant.
+// NewRestaurant は新しい Restaurant を作成する。
 func NewRestaurant(
 	id types.RestaurantID,
 	name string,
@@ -75,8 +75,7 @@ func (r Restaurant) Location() Location     { return r.location }
 func (r Restaurant) Menu() Menu             { return r.menu }
 func (r Restaurant) IsOpen() bool           { return r.isOpen }
 
-// CanAcceptOrder checks whether the restaurant can currently accept orders.
-// Pure function.
+// CanAcceptOrder はレストランが現在注文を受け付けられるかどうかを検証する。純粋関数。
 func CanAcceptOrder(restaurant Restaurant) result.Result[result.Unit] {
 	if !restaurant.IsOpen() {
 		return result.Err[result.Unit](fmt.Errorf("restaurant %s is currently closed", restaurant.Name()))
@@ -87,7 +86,7 @@ func CanAcceptOrder(restaurant Restaurant) result.Result[result.Unit] {
 	return result.OkUnit()
 }
 
-// WithOpenStatus returns a new Restaurant with updated open status.
+// WithOpenStatus は営業状態を更新した新しい Restaurant を返す。
 func (r Restaurant) WithOpenStatus(isOpen bool) Restaurant {
 	return Restaurant{
 		id: r.id, name: r.name, cuisine: r.cuisine,

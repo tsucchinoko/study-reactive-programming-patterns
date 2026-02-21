@@ -10,9 +10,9 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// --- Order mapping (domain → GraphQL) ---
+// --- 注文マッピング (domain → GraphQL) ---
 
-// ToGQLOrder converts a domain Order to a GraphQL Order.
+// ToGQLOrder はドメインのOrderをGraphQLのOrderに変換する。
 func ToGQLOrder(o orderdomain.Order) *generated.Order {
 	return &generated.Order{
 		ID:           o.ID().String(),
@@ -46,7 +46,7 @@ func ToGQLOrders(orders []orderdomain.Order) []*generated.Order {
 	})
 }
 
-// --- Restaurant mapping (domain → GraphQL) ---
+// --- レストランマッピング (domain → GraphQL) ---
 
 func toGQLRestaurant(r restaurantdomain.Restaurant) *generated.Restaurant {
 	return &generated.Restaurant{
@@ -83,7 +83,7 @@ func toGQLRestaurants(restaurants []restaurantdomain.Restaurant) []*generated.Re
 	})
 }
 
-// --- Shared mapping ---
+// --- 共通マッピング ---
 
 func toGQLMoney(m types.Money) *generated.Money {
 	return &generated.Money{

@@ -7,7 +7,7 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// SeedRestaurants returns 20 pre-defined restaurants with menus for simulation.
+// SeedRestaurants はシミュレーション用の20件の定義済みレストランとメニューを返す。
 func SeedRestaurants() []domain.Restaurant {
 	restaurants := []struct {
 		name    string

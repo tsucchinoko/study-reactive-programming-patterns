@@ -5,7 +5,7 @@ import (
 	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
 )
 
-// Resolver is the root resolver. Dependencies are injected here.
+// Resolver はルートリゾルバ。依存関係をここに注入する。
 type Resolver struct {
 	OrderService      *orderapp.OrderService
 	RestaurantService *restaurantapp.RestaurantService

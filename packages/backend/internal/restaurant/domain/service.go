@@ -1,6 +1,5 @@
 package domain
 
-// Domain service functions are defined alongside the aggregates
-// (CanAcceptOrder in restaurant.go, EstimatePreparationTime and
-// ValidateMenuItems in menu.go) since they are pure functions
-// operating on domain types.
+// ドメインサービス関数は集約と同じファイルに定義している。
+// (CanAcceptOrder は restaurant.go、EstimatePreparationTime と
+// ValidateMenuItems は menu.go) これらはドメイン型のみを操作する純粋関数であるため。

@@ -6,7 +6,7 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// RestaurantRepository defines the persistence interface for Restaurant aggregates.
+// RestaurantRepository は Restaurant 集約の永続化インターフェースを定義する。
 type RestaurantRepository interface {
 	Save(ctx context.Context, restaurant Restaurant) error
 	FindByID(ctx context.Context, id types.RestaurantID) (Restaurant, error)

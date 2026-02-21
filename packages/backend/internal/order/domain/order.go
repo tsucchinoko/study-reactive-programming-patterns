@@ -8,9 +8,9 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// Order is the aggregate root for the Order bounded context.
-// All fields are unexported — the aggregate is immutable.
-// State changes produce new Order instances via With* methods.
+// Order は注文境界づけられたコンテキストの集約ルート。
+// 全フィールドは非公開 — 集約はイミュータブル。
+// 状態変更はWith*メソッドを通じて新しいOrderインスタンスを生成する。
 type Order struct {
 	id           types.OrderID
 	customerID   types.CustomerID
@@ -25,8 +25,8 @@ type Order struct {
 	cancelReason option.Option[string]
 }
 
-// NewOrder creates a new Order in Created status.
-// Pure function — validates inputs and computes total.
+// NewOrder はCreatedステータスの新しいOrderを作成する。
+// 純粋関数 — 入力を検証し合計を計算する。
 func NewOrder(
 	id types.OrderID,
 	customerID types.CustomerID,
@@ -58,7 +58,7 @@ func NewOrder(
 	})
 }
 
-// Reconstitute creates an Order from persisted data (bypasses validation).
+// Reconstitute は永続化されたデータからOrderを作成する（バリデーションをスキップ）。
 func Reconstitute(
 	id types.OrderID,
 	customerID types.CustomerID,
@@ -87,7 +87,7 @@ func Reconstitute(
 	}
 }
 
-// --- Accessors ---
+// --- アクセサ ---
 
 func (o Order) ID() types.OrderID                { return o.id }
 func (o Order) CustomerID() types.CustomerID     { return o.customerID }
@@ -102,9 +102,9 @@ func (o Order) DeliveredAt() option.Option[types.Timestamp] { return o.delivered
 func (o Order) CancelledAt() option.Option[types.Timestamp] { return o.cancelledAt }
 func (o Order) CancelReason() option.Option[string]         { return o.cancelReason }
 
-// --- State transitions (return new instances) ---
+// --- 状態遷移（新しいインスタンスを返す） ---
 
-// Confirm transitions the order to Confirmed status.
+// Confirm は注文をConfirmedステータスに遷移させる。
 func (o Order) Confirm(at types.Timestamp) result.Result[Order] {
 	return result.FlatMap(
 		CanTransitionTo(o.status, StatusConfirmed),
@@ -120,8 +120,8 @@ func (o Order) Confirm(at types.Timestamp) result.Result[Order] {
 	)
 }
 
-// TransitionTo moves the order to the given status.
-// For statuses that don't need extra data (Preparing, Ready, PickedUp, Delivering, Delivered).
+// TransitionTo は注文を指定されたステータスに遷移させる。
+// 追加データが不要なステータス用（Preparing, Ready, PickedUp, Delivering, Delivered）。
 func (o Order) TransitionTo(status OrderStatus, at types.Timestamp) result.Result[Order] {
 	return result.FlatMap(
 		CanTransitionTo(o.status, status),
@@ -141,7 +141,7 @@ func (o Order) TransitionTo(status OrderStatus, at types.Timestamp) result.Resul
 	)
 }
 
-// Cancel transitions the order to Cancelled status with a reason.
+// Cancel は理由付きで注文をCancelledステータスに遷移させる。
 func (o Order) Cancel(reason string, at types.Timestamp) result.Result[Order] {
 	return result.FlatMap(
 		CanTransitionTo(o.status, StatusCancelled),
@@ -157,9 +157,9 @@ func (o Order) Cancel(reason string, at types.Timestamp) result.Result[Order] {
 	)
 }
 
-// --- Pure domain functions ---
+// --- 純粋なドメイン関数 ---
 
-// CalculateTotal computes the sum of all item subtotals. Pure function.
+// CalculateTotal は全アイテムの小計の合計を計算する。純粋関数。
 func CalculateTotal(items []OrderItem) types.Money {
 	total := types.JPY(0)
 	for _, item := range items {
@@ -168,7 +168,7 @@ func CalculateTotal(items []OrderItem) types.Money {
 	return total
 }
 
-// copyItems returns a defensive copy of the items slice.
+// copyItems はアイテムスライスの防御的コピーを返す。
 func copyItems(items []OrderItem) []OrderItem {
 	copied := make([]OrderItem, len(items))
 	copy(copied, items)

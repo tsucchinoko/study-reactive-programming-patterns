@@ -8,20 +8,20 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// GenerateRandomOrder creates a random PlaceOrderCommand from available restaurants.
-// Pure function — only depends on its inputs and the random source.
+// GenerateRandomOrder は利用可能なレストランからランダムなPlaceOrderCommandを作成する。
+// 純粋関数 — 入力と乱数ソースにのみ依存する。
 func GenerateRandomOrder(rng *rand.Rand, restaurants []restaurantdomain.Restaurant) orderapp.PlaceOrderCommand {
-	// Pick a random restaurant
+	// ランダムなレストランを選択
 	restaurant := restaurants[rng.Intn(len(restaurants))]
 	availableItems := restaurant.Menu().AvailableItems()
 
-	// Pick 1-3 random items
+	// 1〜3個のランダムなアイテムを選択
 	numItems := rng.Intn(3) + 1
 	if numItems > len(availableItems) {
 		numItems = len(availableItems)
 	}
 
-	// Shuffle and take first N
+	// シャッフルして先頭N個を取得
 	shuffled := make([]restaurantdomain.MenuItem, len(availableItems))
 	copy(shuffled, availableItems)
 	rng.Shuffle(len(shuffled), func(i, j int) {

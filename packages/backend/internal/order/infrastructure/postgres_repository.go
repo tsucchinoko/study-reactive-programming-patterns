@@ -13,12 +13,12 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// PostgresOrderRepository implements domain.OrderRepository using PostgreSQL.
+// PostgresOrderRepository はPostgreSQLを使ったdomain.OrderRepositoryの実装。
 type PostgresOrderRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewPostgresOrderRepository creates a new PostgresOrderRepository.
+// NewPostgresOrderRepository は新しいPostgresOrderRepositoryを作成する。
 func NewPostgresOrderRepository(pool *pgxpool.Pool) *PostgresOrderRepository {
 	return &PostgresOrderRepository{pool: pool}
 }
@@ -57,7 +57,7 @@ func (r *PostgresOrderRepository) Save(ctx context.Context, order domain.Order) 
 		return fmt.Errorf("upsert order: %w", err)
 	}
 
-	// Delete existing items and re-insert (simple approach for upsert)
+	// 既存のアイテムを削除して再挿入（upsertのシンプルなアプローチ）
 	_, err = tx.Exec(ctx, `DELETE FROM order_items WHERE order_id = $1`, order.ID().UUID())
 	if err != nil {
 		return fmt.Errorf("delete order items: %w", err)
@@ -140,7 +140,7 @@ func (r *PostgresOrderRepository) FindAll(ctx context.Context, limit, offset int
 	return r.scanOrders(ctx, rows)
 }
 
-// --- internal helpers ---
+// --- 内部ヘルパー ---
 
 type orderRow struct {
 	id           string

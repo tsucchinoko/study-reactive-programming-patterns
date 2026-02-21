@@ -4,14 +4,14 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// PlaceOrderCommand represents the intent to create a new order.
+// PlaceOrderCommand は新しい注文を作成する意図を表す。
 type PlaceOrderCommand struct {
 	CustomerID   types.CustomerID
 	RestaurantID types.RestaurantID
 	Items        []PlaceOrderItem
 }
 
-// PlaceOrderItem is a DTO for items within a PlaceOrderCommand.
+// PlaceOrderItem はPlaceOrderCommand内のアイテム用DTO。
 type PlaceOrderItem struct {
 	MenuItemID          types.MenuItemID
 	Name                string
@@ -20,18 +20,18 @@ type PlaceOrderItem struct {
 	SpecialInstructions string
 }
 
-// ConfirmOrderCommand represents the intent to confirm an order.
+// ConfirmOrderCommand は注文を確定する意図を表す。
 type ConfirmOrderCommand struct {
 	OrderID types.OrderID
 }
 
-// CancelOrderCommand represents the intent to cancel an order.
+// CancelOrderCommand は注文をキャンセルする意図を表す。
 type CancelOrderCommand struct {
 	OrderID types.OrderID
 	Reason  string
 }
 
-// TransitionOrderCommand represents the intent to advance an order to the next status.
+// TransitionOrderCommand は注文を次のステータスに進める意図を表す。
 type TransitionOrderCommand struct {
 	OrderID   types.OrderID
 	NewStatus string

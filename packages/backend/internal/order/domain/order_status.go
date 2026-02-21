@@ -6,7 +6,7 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
 )
 
-// OrderStatus represents the current state of an order in its lifecycle.
+// OrderStatus は注文のライフサイクルにおける現在の状態を表す。
 type OrderStatus string
 
 const (
@@ -20,8 +20,8 @@ const (
 	StatusCancelled  OrderStatus = "CANCELLED"
 )
 
-// validTransitions defines the allowed state machine transitions.
-// This is a pure data declaration — no side effects.
+// validTransitions は許可されたステートマシンの遷移を定義する。
+// 純粋なデータ宣言 — 副作用なし。
 var validTransitions = map[OrderStatus][]OrderStatus{
 	StatusCreated:    {StatusConfirmed, StatusCancelled},
 	StatusConfirmed:  {StatusPreparing, StatusCancelled},
@@ -33,8 +33,8 @@ var validTransitions = map[OrderStatus][]OrderStatus{
 	StatusCancelled:  {},
 }
 
-// CanTransitionTo checks whether a status transition is valid.
-// Pure function — no side effects.
+// CanTransitionTo はステータス遷移が有効かどうかを検証する。
+// 純粋関数 — 副作用なし。
 func CanTransitionTo(current, next OrderStatus) result.Result[result.Unit] {
 	allowed, exists := validTransitions[current]
 	if !exists {
@@ -50,19 +50,19 @@ func CanTransitionTo(current, next OrderStatus) result.Result[result.Unit] {
 	)
 }
 
-// NextStatuses returns the list of valid next statuses from the current status.
-// Pure function.
+// NextStatuses は現在のステータスから有効な次のステータスのリストを返す。
+// 純粋関数。
 func NextStatuses(current OrderStatus) []OrderStatus {
 	return validTransitions[current]
 }
 
-// IsTerminal returns true if no further transitions are possible.
-// Pure function.
+// IsTerminal はこれ以上の遷移が不可能な場合にtrueを返す。
+// 純粋関数。
 func IsTerminal(status OrderStatus) bool {
 	return len(validTransitions[status]) == 0
 }
 
-// AllStatuses returns all possible order statuses.
+// AllStatuses は全ての注文ステータスを返す。
 func AllStatuses() []OrderStatus {
 	return []OrderStatus{
 		StatusCreated, StatusConfirmed, StatusPreparing, StatusReady,

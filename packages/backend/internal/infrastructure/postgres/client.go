@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Config holds PostgreSQL connection parameters.
+// Config はPostgreSQLの接続パラメータを保持する。
 type Config struct {
 	Host     string
 	Port     int
@@ -17,7 +17,7 @@ type Config struct {
 	SSLMode  string
 }
 
-// DefaultConfig returns configuration for local development.
+// DefaultConfig はローカル開発用の設定を返す。
 func DefaultConfig() Config {
 	return Config{
 		Host:     "localhost",
@@ -29,7 +29,7 @@ func DefaultConfig() Config {
 	}
 }
 
-// DSN returns the connection string.
+// DSN は接続文字列を返す。
 func (c Config) DSN() string {
 	return fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
@@ -37,7 +37,7 @@ func (c Config) DSN() string {
 	)
 }
 
-// NewPool creates a connection pool from Config.
+// NewPool はConfigからコネクションプールを作成する。
 func NewPool(ctx context.Context, cfg Config) (*pgxpool.Pool, error) {
 	pool, err := pgxpool.New(ctx, cfg.DSN())
 	if err != nil {

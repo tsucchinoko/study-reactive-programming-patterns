@@ -25,29 +25,29 @@ func main() {
 
 	log.Println("[api] starting...")
 
-	// Connect to PostgreSQL
+	// PostgreSQLに接続
 	pool, err := postgres.NewPool(ctx, postgres.DefaultConfig())
 	if err != nil {
 		log.Fatalf("[api] failed to connect to database: %v", err)
 	}
 	defer pool.Close()
 
-	// Set up event bus (in-memory for Phase 1)
+	// イベントバスのセットアップ（Phase 1ではインメモリ）
 	bus := events.NewInMemoryBus()
 
-	// Set up subscription manager for GraphQL Subscriptions
+	// GraphQL Subscription用のサブスクリプションマネージャーをセットアップ
 	subMgr := gql.NewSubscriptionManager()
 
-	// Set up repositories
+	// リポジトリのセットアップ
 	orderRepo := orderinfra.NewPostgresOrderRepository(pool)
 	restaurantRepo := restaurantinfra.NewPostgresRestaurantRepository(pool)
 
-	// Set up services
+	// サービスのセットアップ
 	orderService := orderapp.NewOrderService(orderRepo, bus.Publish)
 	restaurantService := restaurantapp.NewRestaurantService(restaurantRepo)
 
-	// Wire event bus → subscription manager.
-	// When any order event fires, re-fetch the order and notify subscribers.
+	// イベントバス → サブスクリプションマネージャーの接続
+	// 注文イベント発火時に注文を再取得し、サブスクライバーに通知する
 	orderTopics := []string{"order.placed", "order.confirmed", "order.status_changed", "order.cancelled"}
 	for _, topic := range orderTopics {
 		bus.Subscribe(ctx, topic, func(event events.DomainEvent) error {
@@ -66,7 +66,7 @@ func main() {
 		})
 	}
 
-	// Set up GraphQL
+	// GraphQLのセットアップ
 	resolver := &gql.Resolver{
 		OrderService:      orderService,
 		RestaurantService: restaurantService,

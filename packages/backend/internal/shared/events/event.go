@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// DomainEvent is the interface all domain events must satisfy.
+// DomainEvent はすべてのドメインイベントが満たすべきインターフェース。
 type DomainEvent interface {
 	EventID() string
 	AggregateID() string
@@ -15,7 +15,7 @@ type DomainEvent interface {
 	Topic() string
 }
 
-// BaseEvent provides common fields for all domain events.
+// BaseEvent はすべてのドメインイベントに共通するフィールドを提供する。
 type BaseEvent struct {
 	ID          string    `json:"event_id"`
 	AggregateId string    `json:"aggregate_id"`
@@ -24,7 +24,7 @@ type BaseEvent struct {
 	TopicName   string    `json:"topic"`
 }
 
-// NewBaseEvent creates a new BaseEvent with a generated UUID and current time.
+// NewBaseEvent は UUID を自動生成し、現在時刻を設定した新しい BaseEvent を作成する。
 func NewBaseEvent(aggregateID, eventType, topic string) BaseEvent {
 	return BaseEvent{
 		ID:          uuid.New().String(),

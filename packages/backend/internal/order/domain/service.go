@@ -7,11 +7,11 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// --- Pure domain service functions ---
-// These functions contain business logic with no side effects.
-// They are easily testable without mocks.
+// --- 純粋なドメインサービス関数 ---
+// これらの関数は副作用のないビジネスロジックを含む。
+// モックなしで簡単にテスト可能。
 
-// ValidateOrderItems checks that all items have valid quantities and prices.
+// ValidateOrderItems は全アイテムの数量と価格が有効かを検証する。
 func ValidateOrderItems(items []OrderItem) result.Result[[]OrderItem] {
 	for _, item := range items {
 		if item.Quantity() <= 0 {
@@ -28,7 +28,7 @@ func ValidateOrderItems(items []OrderItem) result.Result[[]OrderItem] {
 	return result.Ok(items)
 }
 
-// BuildOrder validates items and creates a new Order. Pure function.
+// BuildOrder はアイテムを検証し新しいOrderを作成する。純粋関数。
 func BuildOrder(
 	id types.OrderID,
 	customerID types.CustomerID,

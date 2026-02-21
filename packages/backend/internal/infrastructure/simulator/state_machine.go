@@ -11,8 +11,8 @@ import (
 	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
 )
 
-// transitionDelay returns a random delay for a given status transition.
-// Pure function.
+// transitionDelay は指定されたステータス遷移に対するランダムな遅延を返す。
+// 純粋関数。
 func transitionDelay(rng *rand.Rand, status orderdomain.OrderStatus) time.Duration {
 	ranges := map[orderdomain.OrderStatus][2]int{
 		orderdomain.StatusCreated:    {2, 5},
@@ -30,8 +30,8 @@ func transitionDelay(rng *rand.Rand, status orderdomain.OrderStatus) time.Durati
 	return time.Duration(secs) * time.Second
 }
 
-// nextStatus returns the next happy-path status for simulation.
-// Pure function.
+// nextStatus はシミュレーション用の次の正常系ステータスを返す。
+// 純粋関数。
 func nextStatus(current orderdomain.OrderStatus) (orderdomain.OrderStatus, bool) {
 	transitions := map[orderdomain.OrderStatus]orderdomain.OrderStatus{
 		orderdomain.StatusCreated:    orderdomain.StatusConfirmed,
@@ -45,7 +45,7 @@ func nextStatus(current orderdomain.OrderStatus) (orderdomain.OrderStatus, bool)
 	return next, ok
 }
 
-// RunStateTransitions periodically advances active orders through their lifecycle.
+// RunStateTransitions はアクティブな注文を定期的にライフサイクルに沿って進める。
 func RunStateTransitions(
 	ctx context.Context,
 	rng *rand.Rand,
@@ -90,7 +90,7 @@ func advanceOrders(
 		}
 
 		for _, order := range orders {
-			// Random cancellation chance (only before PICKED_UP)
+			// ランダムなキャンセル判定（PICKED_UP前のみ）
 			if cancelRate > 0 && rng.Float64() < cancelRate && canCancel(order.Status()) {
 				_, err := orderService.CancelOrder(ctx, orderapp.CancelOrderCommand{
 					OrderID: order.ID(),
@@ -104,7 +104,7 @@ func advanceOrders(
 				continue
 			}
 
-			// Check if enough time has passed for transition
+			// 遷移に十分な時間が経過したか確認
 			delay := transitionDelay(rng, order.Status())
 			elapsed := order.PlacedAt().Since()
 			if elapsed < delay {
