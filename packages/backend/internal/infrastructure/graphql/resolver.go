@@ -1,8 +1,8 @@
 package graphql
 
 import (
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
 )
 
 // Resolver はルートリゾルバ。依存関係をここに注入する。

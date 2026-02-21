@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // MenuItem はメニュー上の一品を表す値オブジェクト。

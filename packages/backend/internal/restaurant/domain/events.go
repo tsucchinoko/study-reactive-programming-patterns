@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
 )
 
 type PreparationStarted struct {

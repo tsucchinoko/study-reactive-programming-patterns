@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/option"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/option"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/result"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // Menu はレストランに属する集約を表す。

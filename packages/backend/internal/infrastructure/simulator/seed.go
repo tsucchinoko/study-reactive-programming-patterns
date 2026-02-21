@@ -3,8 +3,8 @@ package simulator
 import (
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // SeedRestaurants はシミュレーション用の20件の定義済みレストランとメニューを返す。

@@ -9,12 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/postgres"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/simulator"
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	orderinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/order/infrastructure"
-	restaurantinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/infrastructure"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/postgres"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/simulator"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	orderinfra "github.com/tsucchinoko/food-delivery-tracker/internal/order/infrastructure"
+	restaurantinfra "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/infrastructure"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
 )
 
 func main() {

@@ -8,9 +8,9 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/order/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/option"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/option"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // PostgresOrderRepository はPostgreSQLを使ったdomain.OrderRepositoryの実装。

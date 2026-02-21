@@ -6,9 +6,9 @@ import (
 	"math/rand"
 	"time"
 
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	orderdomain "github.com/daichitsuchiya/food-delivery-tracker/internal/order/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	orderdomain "github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // transitionDelay は指定されたステータス遷移に対するランダムな遅延を返す。

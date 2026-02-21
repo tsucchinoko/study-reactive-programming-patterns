@@ -3,9 +3,9 @@ package domain
 import (
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/option"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/option"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/result"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // Order は注文境界づけられたコンテキストの集約ルート。

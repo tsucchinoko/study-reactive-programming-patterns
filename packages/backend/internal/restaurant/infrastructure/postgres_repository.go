@@ -8,8 +8,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // PostgresRestaurantRepository はPostgreSQLを使ったdomain.RestaurantRepositoryの実装。

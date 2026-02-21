@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/order/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // OrderService は注文ユースケースをオーケストレーションする。

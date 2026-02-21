@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // PlaceOrderCommand は新しい注文を作成する意図を表す。

@@ -7,8 +7,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
 	"github.com/gorilla/websocket"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
 )
 
 // NewHandler はWebSocketサブスクリプション対応のGraphQL HTTPハンドラを作成する。

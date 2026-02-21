@@ -1,6 +1,6 @@
 package application
 
-import "github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+import "github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 
 // OpenRestaurantCommand はレストランを営業中にするコマンドを表す。
 type OpenRestaurantCommand struct {

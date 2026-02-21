@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
 )
 
 // SubscriptionManager はアクティブなGraphQLサブスクリプションチャネルを管理する。

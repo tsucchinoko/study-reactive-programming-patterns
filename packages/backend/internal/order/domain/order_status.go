@@ -3,7 +3,7 @@ package domain
 import (
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/result"
 )
 
 // OrderStatus は注文のライフサイクルにおける現在の状態を表す。

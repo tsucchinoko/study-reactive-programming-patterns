@@ -1,4 +1,4 @@
-module github.com/daichitsuchiya/food-delivery-tracker
+module github.com/tsucchinoko/food-delivery-tracker
 
 go 1.24.5
 

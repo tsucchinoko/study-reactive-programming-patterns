@@ -3,7 +3,7 @@ package domain
 import (
 	"context"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // RestaurantRepository は Restaurant 集約の永続化インターフェースを定義する。

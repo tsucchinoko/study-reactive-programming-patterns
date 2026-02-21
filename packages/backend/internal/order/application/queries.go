@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // GetOrderQuery はIDで単一の注文を取得する。

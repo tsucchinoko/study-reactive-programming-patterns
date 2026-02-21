@@ -3,11 +3,11 @@ package graphql
 import (
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
-	orderdomain "github.com/daichitsuchiya/food-delivery-tracker/internal/order/domain"
-	restaurantdomain "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
+	orderdomain "github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
+	restaurantdomain "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // --- 注文マッピング (domain → GraphQL) ---

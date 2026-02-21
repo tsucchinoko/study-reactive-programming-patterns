@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	gql "github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/postgres"
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	orderinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/order/infrastructure"
-	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
-	restaurantinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/infrastructure"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	gql "github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/postgres"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	orderinfra "github.com/tsucchinoko/food-delivery-tracker/internal/order/infrastructure"
+	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
+	restaurantinfra "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/infrastructure"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 func main() {

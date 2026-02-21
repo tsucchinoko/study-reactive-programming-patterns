@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
 )
 
 // RestaurantService はレストランのユースケースを統括するサービス。

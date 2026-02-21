@@ -3,8 +3,8 @@ package domain
 import (
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/result"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // --- 純粋なドメインサービス関数 ---

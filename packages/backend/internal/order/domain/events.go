@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // --- 注文ドメインイベント ---

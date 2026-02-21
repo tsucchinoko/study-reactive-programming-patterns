@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // PlaceOrder はplaceOrderフィールドのリゾルバ。

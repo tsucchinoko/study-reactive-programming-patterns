@@ -3,8 +3,8 @@ package domain
 import (
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/result"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/result"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // CuisineType はレストランが提供する料理の種類を表す。

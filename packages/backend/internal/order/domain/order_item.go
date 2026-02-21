@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // OrderItem は注文内の1つの明細を表す値オブジェクト。

@@ -3,9 +3,9 @@ package simulator
 import (
 	"math/rand"
 
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	restaurantdomain "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	restaurantdomain "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
 // GenerateRandomOrder は利用可能なレストランからランダムなPlaceOrderCommandを作成する。
