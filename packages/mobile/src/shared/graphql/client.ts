@@ -1,15 +1,15 @@
 import {
   ApolloClient,
+  ApolloLink,
   InMemoryCache,
   HttpLink,
-  split,
 } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 import { Platform } from "react-native";
 
-// Android emulator uses 10.0.2.2 to reach host machine's localhost.
+// Androidエミュレータはホストマシンのlocalhostに接続するために10.0.2.2を使用する。
 const HOST = Platform.OS === "android" ? "10.0.2.2" : "localhost";
 const API_URL = `http://${HOST}:8080/graphql`;
 const WS_URL = `ws://${HOST}:8080/graphql`;
@@ -24,8 +24,8 @@ const wsLink = new GraphQLWsLink(
   })
 );
 
-// Route subscriptions over WebSocket, everything else over HTTP.
-const splitLink = split(
+// SubscriptionはWebSocket経由、それ以外はHTTP経由でルーティングする。
+const splitLink = ApolloLink.split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (

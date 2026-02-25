@@ -8,11 +8,11 @@ type ObservableState<T> =
   | { status: "error"; error: unknown };
 
 /**
- * Subscribe to an RxJS Observable and bind its emissions to React state.
- * Automatically unsubscribes on unmount or when deps change.
+ * RxJS ObservableをサブスクライブしてReactのステートにバインドする。
+ * アンマウント時またはdepsの変更時に自動的にサブスクリプションを解除する。
  *
- * @param factory  Function returning the Observable (called when deps change).
- * @param deps     Dependency array (same semantics as useEffect).
+ * @param factory  Observableを返す関数（depsの変更時に再実行される）。
+ * @param deps     依存配列（useEffectと同じセマンティクス）。
  */
 export function useObservable<T>(
   factory: () => Observable<T>,

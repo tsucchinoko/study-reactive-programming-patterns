@@ -1,10 +1,10 @@
 import { Observable, retry, timer } from "rxjs";
 
 /**
- * Retry with exponential backoff.
+ * 指数バックオフ付きリトライ。
  *
- * Example: retryWithBackoff(3, 1000)
- *   → 1st retry after ~1s, 2nd after ~2s, 3rd after ~4s
+ * 例: retryWithBackoff(3, 1000)
+ *   → 1回目: 約1秒後、2回目: 約2秒後、3回目: 約4秒後
  */
 export const retryWithBackoff = <T>(
   maxRetries: number,
@@ -16,7 +16,7 @@ export const retryWithBackoff = <T>(
       timer(initialDelayMs * Math.pow(2, retryCount - 1)),
   });
 
-/** Minimal subset of the Observable-like interface Apollo Client returns. */
+/** Apollo Clientが返すObservableライクなインターフェースの最小サブセット。 */
 type ObservableLike<T> = {
   subscribe(observer: {
     next?: (value: T) => void;
@@ -26,8 +26,8 @@ type ObservableLike<T> = {
 };
 
 /**
- * Create an RxJS Observable from an Apollo subscription observable.
- * Apollo's Observable is not a true RxJS Observable — this bridges the gap.
+ * ApolloのSubscription ObservableからRxJS Observableを生成する。
+ * ApolloのObservableは真のRxJS Observableではないため、このブリッジが必要。
  */
 export const fromApolloSubscription = <T>(
   apolloObservable: ObservableLike<T>,
