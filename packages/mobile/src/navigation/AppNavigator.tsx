@@ -3,12 +3,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { OrderListScreen } from "../features/order/screens/OrderListScreen";
 import { OrderDetailScreen } from "../features/order/screens/OrderDetailScreen";
+import { TrackingScreen } from "../features/delivery/screens/TrackingScreen";
 import { RestaurantListScreen } from "../features/restaurant/screens/RestaurantListScreen";
 import { Text } from "react-native";
 
 export type RootStackParamList = {
   Tabs: undefined;
   OrderDetail: { orderId: string };
+  Tracking: { orderId: string };
   // Keep flat for OrderListScreen navigation.navigate compatibility.
   OrderList: undefined;
   Restaurants: undefined;
@@ -72,6 +74,11 @@ export function AppNavigator() {
         name="OrderDetail"
         component={OrderDetailScreen}
         options={{ title: "注文詳細" }}
+      />
+      <Stack.Screen
+        name="Tracking"
+        component={TrackingScreen}
+        options={{ title: "配達追跡" }}
       />
     </Stack.Navigator>
   );
