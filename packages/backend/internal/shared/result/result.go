@@ -1,27 +1,27 @@
 package result
 
-// Result represents either a success value of type T or an error.
-// It enforces explicit error handling through Map/FlatMap/Match.
+// Result は型 T の成功値またはエラーのいずれかを表す。
+// Map/FlatMap/Match を通じて明示的なエラーハンドリングを強制する。
 type Result[T any] struct {
 	value T
 	err   error
 	ok    bool
 }
 
-// Unit represents a void success value.
+// Unit は void の成功値を表す。
 type Unit struct{}
 
-// Ok creates a successful Result.
+// Ok は成功した Result を生成する。
 func Ok[T any](value T) Result[T] {
 	return Result[T]{value: value, ok: true}
 }
 
-// Err creates a failed Result.
+// Err は失敗した Result を生成する。
 func Err[T any](err error) Result[T] {
 	return Result[T]{err: err, ok: false}
 }
 
-// FromError converts a (value, error) pair into a Result.
+// FromError は (value, error) のペアを Result に変換する。
 func FromError[T any](value T, err error) Result[T] {
 	if err != nil {
 		return Err[T](err)
@@ -29,27 +29,27 @@ func FromError[T any](value T, err error) Result[T] {
 	return Ok(value)
 }
 
-// OkUnit creates a successful Result[Unit].
+// OkUnit は成功した Result[Unit] を生成する。
 func OkUnit() Result[Unit] {
 	return Ok(Unit{})
 }
 
-// ErrUnit creates a failed Result[Unit].
+// ErrUnit は失敗した Result[Unit] を生成する。
 func ErrUnit(err error) Result[Unit] {
 	return Err[Unit](err)
 }
 
-// IsOk returns true if the Result is a success.
+// IsOk は Result が成功の場合に true を返す。
 func (r Result[T]) IsOk() bool {
 	return r.ok
 }
 
-// IsErr returns true if the Result is a failure.
+// IsErr は Result が失敗の場合に true を返す。
 func (r Result[T]) IsErr() bool {
 	return !r.ok
 }
 
-// Unwrap returns the success value or panics.
+// Unwrap は成功値を返す。失敗の場合はパニックする。
 func (r Result[T]) Unwrap() T {
 	if !r.ok {
 		panic("called Unwrap on an Err Result")
@@ -57,7 +57,7 @@ func (r Result[T]) Unwrap() T {
 	return r.value
 }
 
-// UnwrapErr returns the error or panics.
+// UnwrapErr はエラーを返す。成功の場合はパニックする。
 func (r Result[T]) UnwrapErr() error {
 	if r.ok {
 		panic("called UnwrapErr on an Ok Result")
@@ -65,7 +65,7 @@ func (r Result[T]) UnwrapErr() error {
 	return r.err
 }
 
-// UnwrapOr returns the success value or the provided default.
+// UnwrapOr は成功値を返す。失敗の場合は指定したデフォルト値を返す。
 func (r Result[T]) UnwrapOr(defaultVal T) T {
 	if r.ok {
 		return r.value
@@ -73,7 +73,7 @@ func (r Result[T]) UnwrapOr(defaultVal T) T {
 	return defaultVal
 }
 
-// Match calls onOk if success, onErr if failure.
+// Match は成功の場合に onOk を、失敗の場合に onErr を呼び出す。
 func (r Result[T]) Match(onOk func(T), onErr func(error)) {
 	if r.ok {
 		onOk(r.value)
@@ -82,7 +82,7 @@ func (r Result[T]) Match(onOk func(T), onErr func(error)) {
 	}
 }
 
-// Map transforms the success value using f. Errors pass through unchanged.
+// Map は f を使って成功値を変換する。エラーはそのまま通過する。
 func Map[T any, U any](r Result[T], f func(T) U) Result[U] {
 	if !r.ok {
 		return Err[U](r.err)
@@ -90,7 +90,7 @@ func Map[T any, U any](r Result[T], f func(T) U) Result[U] {
 	return Ok(f(r.value))
 }
 
-// FlatMap transforms the success value using f which itself returns a Result.
+// FlatMap は Result を返す f を使って成功値を変換する。
 func FlatMap[T any, U any](r Result[T], f func(T) Result[U]) Result[U] {
 	if !r.ok {
 		return Err[U](r.err)
@@ -98,7 +98,7 @@ func FlatMap[T any, U any](r Result[T], f func(T) Result[U]) Result[U] {
 	return f(r.value)
 }
 
-// MapErr transforms the error value using f. Successes pass through unchanged.
+// MapErr は f を使ってエラー値を変換する。成功はそのまま通過する。
 func MapErr[T any](r Result[T], f func(error) error) Result[T] {
 	if r.ok {
 		return r

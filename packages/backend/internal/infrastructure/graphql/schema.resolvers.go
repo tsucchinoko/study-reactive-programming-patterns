@@ -10,14 +10,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	restaurantapp "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/application"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// PlaceOrder is the resolver for the placeOrder field.
+// PlaceOrder はplaceOrderフィールドのリゾルバ。
 func (r *mutationResolver) PlaceOrder(ctx context.Context, input generated.PlaceOrderInput) (*generated.Order, error) {
 	customerID, err := types.ParseCustomerID(input.CustomerID)
 	if err != nil {
@@ -54,7 +54,7 @@ func (r *mutationResolver) PlaceOrder(ctx context.Context, input generated.Place
 	return ToGQLOrder(order), nil
 }
 
-// ConfirmOrder is the resolver for the confirmOrder field.
+// ConfirmOrder はconfirmOrderフィールドのリゾルバ。
 func (r *mutationResolver) ConfirmOrder(ctx context.Context, orderID string) (*generated.Order, error) {
 	id, err := types.ParseOrderID(orderID)
 	if err != nil {
@@ -67,7 +67,7 @@ func (r *mutationResolver) ConfirmOrder(ctx context.Context, orderID string) (*g
 	return ToGQLOrder(order), nil
 }
 
-// CancelOrder is the resolver for the cancelOrder field.
+// CancelOrder はcancelOrderフィールドのリゾルバ。
 func (r *mutationResolver) CancelOrder(ctx context.Context, orderID string, reason string) (*generated.Order, error) {
 	id, err := types.ParseOrderID(orderID)
 	if err != nil {
@@ -83,7 +83,7 @@ func (r *mutationResolver) CancelOrder(ctx context.Context, orderID string, reas
 	return ToGQLOrder(order), nil
 }
 
-// TransitionOrder is the resolver for the transitionOrder field.
+// TransitionOrder はtransitionOrderフィールドのリゾルバ。
 func (r *mutationResolver) TransitionOrder(ctx context.Context, orderID string, newStatus generated.OrderStatus) (*generated.Order, error) {
 	id, err := types.ParseOrderID(orderID)
 	if err != nil {
@@ -99,7 +99,7 @@ func (r *mutationResolver) TransitionOrder(ctx context.Context, orderID string, 
 	return ToGQLOrder(order), nil
 }
 
-// Order is the resolver for the order field.
+// Order はorderフィールドのリゾルバ。
 func (r *queryResolver) Order(ctx context.Context, id string) (*generated.Order, error) {
 	orderID, err := types.ParseOrderID(id)
 	if err != nil {
@@ -112,7 +112,7 @@ func (r *queryResolver) Order(ctx context.Context, id string) (*generated.Order,
 	return ToGQLOrder(order), nil
 }
 
-// Orders is the resolver for the orders field.
+// Orders はordersフィールドのリゾルバ。
 func (r *queryResolver) Orders(ctx context.Context, limit *int, offset *int) ([]*generated.Order, error) {
 	l, o := 20, 0
 	if limit != nil {
@@ -128,7 +128,7 @@ func (r *queryResolver) Orders(ctx context.Context, limit *int, offset *int) ([]
 	return ToGQLOrders(orders), nil
 }
 
-// OrdersByStatus is the resolver for the ordersByStatus field.
+// OrdersByStatus はordersByStatusフィールドのリゾルバ。
 func (r *queryResolver) OrdersByStatus(ctx context.Context, status generated.OrderStatus) ([]*generated.Order, error) {
 	orders, err := r.OrderService.ListOrdersByStatus(ctx, orderapp.ListOrdersByStatusQuery{Status: string(status)})
 	if err != nil {
@@ -137,7 +137,7 @@ func (r *queryResolver) OrdersByStatus(ctx context.Context, status generated.Ord
 	return ToGQLOrders(orders), nil
 }
 
-// Restaurant is the resolver for the restaurant field.
+// Restaurant はrestaurantフィールドのリゾルバ。
 func (r *queryResolver) Restaurant(ctx context.Context, id string) (*generated.Restaurant, error) {
 	restID, err := types.ParseRestaurantID(id)
 	if err != nil {
@@ -150,7 +150,7 @@ func (r *queryResolver) Restaurant(ctx context.Context, id string) (*generated.R
 	return toGQLRestaurant(restaurant), nil
 }
 
-// Restaurants is the resolver for the restaurants field.
+// Restaurants はrestaurantsフィールドのリゾルバ。
 func (r *queryResolver) Restaurants(ctx context.Context) ([]*generated.Restaurant, error) {
 	restaurants, err := r.RestaurantService.ListRestaurants(ctx, restaurantapp.ListRestaurantsQuery{})
 	if err != nil {
@@ -159,12 +159,12 @@ func (r *queryResolver) Restaurants(ctx context.Context) ([]*generated.Restauran
 	return toGQLRestaurants(restaurants), nil
 }
 
-// OrderStatusChanged is the resolver for the orderStatusChanged field.
+// OrderStatusChanged はorderStatusChangedフィールドのリゾルバ。
 func (r *subscriptionResolver) OrderStatusChanged(ctx context.Context, orderID string) (<-chan *generated.Order, error) {
 	subscriberID := fmt.Sprintf("sub-%s-%d", orderID, time.Now().UnixNano())
 	ch, unsubscribe := r.SubscriptionMgr.Subscribe(orderID, subscriberID)
 
-	// Clean up when client disconnects.
+	// クライアント切断時にクリーンアップ
 	go func() {
 		<-ctx.Done()
 		unsubscribe()
@@ -173,13 +173,13 @@ func (r *subscriptionResolver) OrderStatusChanged(ctx context.Context, orderID s
 	return ch, nil
 }
 
-// Mutation returns generated.MutationResolver implementation.
+// Mutation はMutationResolverの実装を返す。
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
-// Query returns generated.QueryResolver implementation.
+// Query はQueryResolverの実装を返す。
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-// Subscription returns generated.SubscriptionResolver implementation.
+// Subscription はSubscriptionResolverの実装を返す。
 func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
 
 type mutationResolver struct{ *Resolver }

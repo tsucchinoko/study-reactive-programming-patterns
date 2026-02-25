@@ -1,22 +1,22 @@
 package option
 
-// Option represents an optional value of type T.
-// It replaces nil pointers with explicit presence/absence semantics.
+// Option は型 T のオプショナルな値を表す。
+// nil ポインタを明示的な有無のセマンティクスに置き換える。
 type Option[T any] struct {
 	value *T
 }
 
-// Some creates an Option containing a value.
+// Some は値を含む Option を生成する。
 func Some[T any](v T) Option[T] {
 	return Option[T]{value: &v}
 }
 
-// None creates an empty Option.
+// None は空の Option を生成する。
 func None[T any]() Option[T] {
 	return Option[T]{value: nil}
 }
 
-// FromPtr creates an Option from a pointer.
+// FromPtr はポインタから Option を生成する。
 func FromPtr[T any](p *T) Option[T] {
 	if p == nil {
 		return None[T]()
@@ -24,17 +24,17 @@ func FromPtr[T any](p *T) Option[T] {
 	return Some(*p)
 }
 
-// IsSome returns true if the Option contains a value.
+// IsSome は Option が値を含む場合に true を返す。
 func (o Option[T]) IsSome() bool {
 	return o.value != nil
 }
 
-// IsNone returns true if the Option is empty.
+// IsNone は Option が空の場合に true を返す。
 func (o Option[T]) IsNone() bool {
 	return o.value == nil
 }
 
-// Unwrap returns the value or panics if empty.
+// Unwrap は値を返す。Option が空の場合はパニックする。
 func (o Option[T]) Unwrap() T {
 	if o.value == nil {
 		panic("called Unwrap on a None Option")
@@ -42,7 +42,7 @@ func (o Option[T]) Unwrap() T {
 	return *o.value
 }
 
-// UnwrapOr returns the value or the provided default.
+// UnwrapOr は値を返す。Option が空の場合は指定したデフォルト値を返す。
 func (o Option[T]) UnwrapOr(defaultVal T) T {
 	if o.value == nil {
 		return defaultVal
@@ -50,12 +50,12 @@ func (o Option[T]) UnwrapOr(defaultVal T) T {
 	return *o.value
 }
 
-// ToPtr returns the underlying pointer (nil if None).
+// ToPtr は内部ポインタを返す（None の場合は nil）。
 func (o Option[T]) ToPtr() *T {
 	return o.value
 }
 
-// Match calls onSome if present, onNone if empty.
+// Match は値がある場合に onSome を、空の場合に onNone を呼び出す。
 func (o Option[T]) Match(onSome func(T), onNone func()) {
 	if o.value != nil {
 		onSome(*o.value)
@@ -64,7 +64,7 @@ func (o Option[T]) Match(onSome func(T), onNone func()) {
 	}
 }
 
-// Map transforms the contained value using f. None passes through unchanged.
+// Map は f を使って内包する値を変換する。None はそのまま通過する。
 func Map[T any, U any](o Option[T], f func(T) U) Option[U] {
 	if o.value == nil {
 		return None[U]()
@@ -72,7 +72,7 @@ func Map[T any, U any](o Option[T], f func(T) U) Option[U] {
 	return Some(f(*o.value))
 }
 
-// FlatMap transforms the contained value using f which itself returns an Option.
+// FlatMap は Option を返す f を使って内包する値を変換する。
 func FlatMap[T any, U any](o Option[T], f func(T) Option[U]) Option[U] {
 	if o.value == nil {
 		return None[U]()
@@ -80,7 +80,7 @@ func FlatMap[T any, U any](o Option[T], f func(T) Option[U]) Option[U] {
 	return f(*o.value)
 }
 
-// Filter returns None if the predicate returns false.
+// Filter は predicate が false を返す場合に None を返す。
 func Filter[T any](o Option[T], predicate func(T) bool) Option[T] {
 	if o.value != nil && predicate(*o.value) {
 		return o

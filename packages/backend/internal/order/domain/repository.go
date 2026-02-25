@@ -3,11 +3,11 @@ package domain
 import (
 	"context"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// OrderRepository defines the persistence interface for Order aggregates.
-// Implementation lives in infrastructure/ — domain knows nothing about storage.
+// OrderRepository はOrder集約の永続化インターフェースを定義する。
+// 実装はinfrastructure/にあり、ドメインはストレージについて何も知らない。
 type OrderRepository interface {
 	Save(ctx context.Context, order Order) error
 	FindByID(ctx context.Context, id types.OrderID) (Order, error)

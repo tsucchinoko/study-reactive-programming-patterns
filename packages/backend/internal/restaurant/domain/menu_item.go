@@ -3,10 +3,10 @@ package domain
 import (
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// MenuItem is a value object representing a single dish on a menu.
+// MenuItem はメニュー上の一品を表す値オブジェクト。
 type MenuItem struct {
 	id        types.MenuItemID
 	name      string
@@ -16,7 +16,7 @@ type MenuItem struct {
 	available bool
 }
 
-// NewMenuItem creates a new MenuItem value object.
+// NewMenuItem は新しい MenuItem 値オブジェクトを作成する。
 func NewMenuItem(id types.MenuItemID, name, category string, price types.Money, prepTime time.Duration, available bool) MenuItem {
 	return MenuItem{
 		id:        id,
@@ -35,7 +35,7 @@ func (m MenuItem) Price() types.Money      { return m.price }
 func (m MenuItem) PrepTime() time.Duration { return m.prepTime }
 func (m MenuItem) Available() bool         { return m.available }
 
-// WithAvailability returns a new MenuItem with updated availability.
+// WithAvailability は在庫状態を更新した新しい MenuItem を返す。
 func (m MenuItem) WithAvailability(available bool) MenuItem {
 	return MenuItem{
 		id: m.id, name: m.name, category: m.category,

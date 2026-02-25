@@ -4,25 +4,25 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/order/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/fp"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/fp"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// OrderService orchestrates order use cases.
-// Domain logic lives in domain/ — this layer handles side effects (persistence, events).
+// OrderService は注文ユースケースをオーケストレーションする。
+// ドメインロジックはdomain/にあり、このレイヤーは副作用（永続化、イベント）を処理する。
 type OrderService struct {
 	repo      domain.OrderRepository
 	publisher events.EventPublisher
 }
 
-// NewOrderService creates a new OrderService.
+// NewOrderService は新しいOrderServiceを作成する。
 func NewOrderService(repo domain.OrderRepository, publisher events.EventPublisher) *OrderService {
 	return &OrderService{repo: repo, publisher: publisher}
 }
 
-// PlaceOrder creates a new order from the command.
+// PlaceOrder はコマンドから新しい注文を作成する。
 func (s *OrderService) PlaceOrder(ctx context.Context, cmd PlaceOrderCommand) (domain.Order, error) {
 	items := fp.Map(cmd.Items, func(i PlaceOrderItem) domain.OrderItem {
 		return domain.NewOrderItem(i.MenuItemID, i.Name, i.Quantity, i.UnitPrice, i.SpecialInstructions)
@@ -52,7 +52,7 @@ func (s *OrderService) PlaceOrder(ctx context.Context, cmd PlaceOrderCommand) (d
 	return order, nil
 }
 
-// ConfirmOrder transitions an order to Confirmed status.
+// ConfirmOrder は注文をConfirmedステータスに遷移させる。
 func (s *OrderService) ConfirmOrder(ctx context.Context, cmd ConfirmOrderCommand) (domain.Order, error) {
 	order, err := s.repo.FindByID(ctx, cmd.OrderID)
 	if err != nil {
@@ -78,7 +78,7 @@ func (s *OrderService) ConfirmOrder(ctx context.Context, cmd ConfirmOrderCommand
 	return confirmed, nil
 }
 
-// CancelOrder transitions an order to Cancelled status.
+// CancelOrder は注文をCancelledステータスに遷移させる。
 func (s *OrderService) CancelOrder(ctx context.Context, cmd CancelOrderCommand) (domain.Order, error) {
 	order, err := s.repo.FindByID(ctx, cmd.OrderID)
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *OrderService) CancelOrder(ctx context.Context, cmd CancelOrderCommand) 
 	return cancelled, nil
 }
 
-// TransitionOrder advances an order to the specified status.
+// TransitionOrder は注文を指定されたステータスに進める。
 func (s *OrderService) TransitionOrder(ctx context.Context, cmd TransitionOrderCommand) (domain.Order, error) {
 	order, err := s.repo.FindByID(ctx, cmd.OrderID)
 	if err != nil {
@@ -129,17 +129,17 @@ func (s *OrderService) TransitionOrder(ctx context.Context, cmd TransitionOrderC
 	return transitioned, nil
 }
 
-// GetOrder retrieves a single order by ID.
+// GetOrder はIDで単一の注文を取得する。
 func (s *OrderService) GetOrder(ctx context.Context, q GetOrderQuery) (domain.Order, error) {
 	return s.repo.FindByID(ctx, q.OrderID)
 }
 
-// ListOrders retrieves orders with pagination.
+// ListOrders はページネーション付きで注文を取得する。
 func (s *OrderService) ListOrders(ctx context.Context, q ListOrdersQuery) ([]domain.Order, error) {
 	return s.repo.FindAll(ctx, q.Limit, q.Offset)
 }
 
-// ListOrdersByStatus retrieves orders filtered by status.
+// ListOrdersByStatus はステータスでフィルタリングした注文を取得する。
 func (s *OrderService) ListOrdersByStatus(ctx context.Context, q ListOrdersByStatusQuery) ([]domain.Order, error) {
 	return s.repo.FindByStatus(ctx, domain.OrderStatus(q.Status))
 }

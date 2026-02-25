@@ -1,11 +1,11 @@
 package domain
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// OrderItem is a value object representing a single line item in an order.
-// Immutable — all fields are unexported with accessor methods.
+// OrderItem は注文内の1つの明細を表す値オブジェクト。
+// イミュータブル — 全フィールドは非公開でアクセサメソッドを持つ。
 type OrderItem struct {
 	menuItemID          types.MenuItemID
 	name                string
@@ -14,7 +14,7 @@ type OrderItem struct {
 	specialInstructions string
 }
 
-// NewOrderItem creates a new OrderItem value object.
+// NewOrderItem は新しいOrderItem値オブジェクトを作成する。
 func NewOrderItem(menuItemID types.MenuItemID, name string, quantity int, unitPrice types.Money, instructions string) OrderItem {
 	return OrderItem{
 		menuItemID:          menuItemID,
@@ -31,7 +31,7 @@ func (i OrderItem) Quantity() int                { return i.quantity }
 func (i OrderItem) UnitPrice() types.Money       { return i.unitPrice }
 func (i OrderItem) SpecialInstructions() string  { return i.specialInstructions }
 
-// Subtotal returns unitPrice * quantity. Pure function.
+// Subtotal はunitPrice * quantityを返す。純粋関数。
 func (i OrderItem) Subtotal() types.Money {
 	return i.unitPrice.Multiply(i.quantity)
 }

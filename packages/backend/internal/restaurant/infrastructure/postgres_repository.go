@@ -8,16 +8,16 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/domain"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// PostgresRestaurantRepository implements domain.RestaurantRepository using PostgreSQL.
+// PostgresRestaurantRepository はPostgreSQLを使ったdomain.RestaurantRepositoryの実装。
 type PostgresRestaurantRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewPostgresRestaurantRepository creates a new PostgresRestaurantRepository.
+// NewPostgresRestaurantRepository は新しいPostgresRestaurantRepositoryを作成する。
 func NewPostgresRestaurantRepository(pool *pgxpool.Pool) *PostgresRestaurantRepository {
 	return &PostgresRestaurantRepository{pool: pool}
 }
@@ -52,7 +52,7 @@ func (r *PostgresRestaurantRepository) Save(ctx context.Context, restaurant doma
 		return fmt.Errorf("upsert restaurant: %w", err)
 	}
 
-	// Re-insert menu items
+	// メニューアイテムを再挿入
 	_, err = tx.Exec(ctx, `DELETE FROM menu_items WHERE restaurant_id = $1`, restaurant.ID().UUID())
 	if err != nil {
 		return fmt.Errorf("delete menu items: %w", err)
@@ -121,7 +121,7 @@ func (r *PostgresRestaurantRepository) FindByCuisine(ctx context.Context, cuisin
 	return r.scanRestaurants(ctx, rows)
 }
 
-// --- internal helpers ---
+// --- 内部ヘルパー ---
 
 type restaurantRow struct {
 	id      string

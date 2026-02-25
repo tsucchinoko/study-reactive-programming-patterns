@@ -1,11 +1,11 @@
 package domain
 
 import (
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/types"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/types"
 )
 
-// --- Order Domain Events ---
+// --- 注文ドメインイベント ---
 
 type OrderPlaced struct {
 	events.BaseEvent

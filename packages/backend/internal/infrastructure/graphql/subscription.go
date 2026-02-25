@@ -4,25 +4,25 @@ import (
 	"log"
 	"sync"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/graphql/generated"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
 )
 
-// SubscriptionManager manages active GraphQL subscription channels.
-// Thread-safe: multiple goroutines can subscribe/notify concurrently.
+// SubscriptionManager はアクティブなGraphQLサブスクリプションチャネルを管理する。
+// スレッドセーフ: 複数のゴルーチンが同時にsubscribe/notifyを呼び出せる。
 type SubscriptionManager struct {
 	mu          sync.RWMutex
 	subscribers map[string]map[string]chan *generated.Order // orderID → subscriberID → channel
 }
 
-// NewSubscriptionManager creates a new SubscriptionManager.
+// NewSubscriptionManager は新しいSubscriptionManagerを作成する。
 func NewSubscriptionManager() *SubscriptionManager {
 	return &SubscriptionManager{
 		subscribers: make(map[string]map[string]chan *generated.Order),
 	}
 }
 
-// Subscribe registers a new subscriber for the given order ID.
-// Returns a read-only channel and an unsubscribe function.
+// Subscribe は指定された注文IDに新しいサブスクライバーを登録する。
+// 読み取り専用チャネルとアンサブスクライブ関数を返す。
 func (m *SubscriptionManager) Subscribe(orderID, subscriberID string) (<-chan *generated.Order, func()) {
 	ch := make(chan *generated.Order, 1)
 
@@ -53,8 +53,8 @@ func (m *SubscriptionManager) Subscribe(orderID, subscriberID string) (<-chan *g
 	return ch, unsubscribe
 }
 
-// Notify sends the updated order to all subscribers watching the given order ID.
-// Non-blocking: if a subscriber's channel is full, the update is dropped.
+// Notify は指定された注文IDを監視している全サブスクライバーに更新された注文を送信する。
+// ノンブロッキング: サブスクライバーのチャネルが満杯の場合、更新はドロップされる。
 func (m *SubscriptionManager) Notify(orderID string, order *generated.Order) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

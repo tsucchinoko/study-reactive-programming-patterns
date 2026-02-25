@@ -2,7 +2,7 @@ package types
 
 import "github.com/google/uuid"
 
-// Typed ID wrappers provide compile-time safety against mixing different ID types.
+// 型付き ID ラッパーは、異なる ID 型の混在をコンパイル時に防ぐ。
 
 type OrderID struct{ value uuid.UUID }
 type CustomerID struct{ value uuid.UUID }
@@ -13,13 +13,13 @@ type DriverID struct{ value uuid.UUID }
 type AssignmentID struct{ value uuid.UUID }
 type NotificationID struct{ value uuid.UUID }
 
-// NewOrderID creates a new random OrderID.
+// NewOrderID は新しいランダムな OrderID を生成する。
 func NewOrderID() OrderID { return OrderID{value: uuid.New()} }
 
-// OrderIDFrom creates an OrderID from an existing UUID.
+// OrderIDFrom は既存の UUID から OrderID を生成する。
 func OrderIDFrom(id uuid.UUID) OrderID { return OrderID{value: id} }
 
-// ParseOrderID parses a string into an OrderID.
+// ParseOrderID は文字列を OrderID にパースする。
 func ParseOrderID(s string) (OrderID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
@@ -31,13 +31,13 @@ func ParseOrderID(s string) (OrderID, error) {
 func (id OrderID) String() string  { return id.value.String() }
 func (id OrderID) UUID() uuid.UUID { return id.value }
 
-// NewCustomerID creates a new random CustomerID.
+// NewCustomerID は新しいランダムな CustomerID を生成する。
 func NewCustomerID() CustomerID { return CustomerID{value: uuid.New()} }
 
-// CustomerIDFrom creates a CustomerID from an existing UUID.
+// CustomerIDFrom は既存の UUID から CustomerID を生成する。
 func CustomerIDFrom(id uuid.UUID) CustomerID { return CustomerID{value: id} }
 
-// ParseCustomerID parses a string into a CustomerID.
+// ParseCustomerID は文字列を CustomerID にパースする。
 func ParseCustomerID(s string) (CustomerID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
@@ -49,13 +49,13 @@ func ParseCustomerID(s string) (CustomerID, error) {
 func (id CustomerID) String() string  { return id.value.String() }
 func (id CustomerID) UUID() uuid.UUID { return id.value }
 
-// NewRestaurantID creates a new random RestaurantID.
+// NewRestaurantID は新しいランダムな RestaurantID を生成する。
 func NewRestaurantID() RestaurantID { return RestaurantID{value: uuid.New()} }
 
-// RestaurantIDFrom creates a RestaurantID from an existing UUID.
+// RestaurantIDFrom は既存の UUID から RestaurantID を生成する。
 func RestaurantIDFrom(id uuid.UUID) RestaurantID { return RestaurantID{value: id} }
 
-// ParseRestaurantID parses a string into a RestaurantID.
+// ParseRestaurantID は文字列を RestaurantID にパースする。
 func ParseRestaurantID(s string) (RestaurantID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
@@ -67,28 +67,28 @@ func ParseRestaurantID(s string) (RestaurantID, error) {
 func (id RestaurantID) String() string  { return id.value.String() }
 func (id RestaurantID) UUID() uuid.UUID { return id.value }
 
-// NewMenuID creates a new random MenuID.
+// NewMenuID は新しいランダムな MenuID を生成する。
 func NewMenuID() MenuID { return MenuID{value: uuid.New()} }
 
 func (id MenuID) String() string  { return id.value.String() }
 func (id MenuID) UUID() uuid.UUID { return id.value }
 
-// NewMenuItemID creates a new random MenuItemID.
+// NewMenuItemID は新しいランダムな MenuItemID を生成する。
 func NewMenuItemID() MenuItemID { return MenuItemID{value: uuid.New()} }
 
-// MenuItemIDFrom creates a MenuItemID from an existing UUID.
+// MenuItemIDFrom は既存の UUID から MenuItemID を生成する。
 func MenuItemIDFrom(id uuid.UUID) MenuItemID { return MenuItemID{value: id} }
 
 func (id MenuItemID) String() string  { return id.value.String() }
 func (id MenuItemID) UUID() uuid.UUID { return id.value }
 
-// NewDriverID creates a new random DriverID.
+// NewDriverID は新しいランダムな DriverID を生成する。
 func NewDriverID() DriverID { return DriverID{value: uuid.New()} }
 
-// DriverIDFrom creates a DriverID from an existing UUID.
+// DriverIDFrom は既存の UUID から DriverID を生成する。
 func DriverIDFrom(id uuid.UUID) DriverID { return DriverID{value: id} }
 
-// ParseDriverID parses a string into a DriverID.
+// ParseDriverID は文字列を DriverID にパースする。
 func ParseDriverID(s string) (DriverID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
@@ -100,13 +100,13 @@ func ParseDriverID(s string) (DriverID, error) {
 func (id DriverID) String() string  { return id.value.String() }
 func (id DriverID) UUID() uuid.UUID { return id.value }
 
-// NewAssignmentID creates a new random AssignmentID.
+// NewAssignmentID は新しいランダムな AssignmentID を生成する。
 func NewAssignmentID() AssignmentID { return AssignmentID{value: uuid.New()} }
 
 func (id AssignmentID) String() string  { return id.value.String() }
 func (id AssignmentID) UUID() uuid.UUID { return id.value }
 
-// NewNotificationID creates a new random NotificationID.
+// NewNotificationID は新しいランダムな NotificationID を生成する。
 func NewNotificationID() NotificationID { return NotificationID{value: uuid.New()} }
 
 func (id NotificationID) String() string  { return id.value.String() }

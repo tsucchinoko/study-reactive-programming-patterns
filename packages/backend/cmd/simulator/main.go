@@ -9,12 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/postgres"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/infrastructure/simulator"
-	orderapp "github.com/daichitsuchiya/food-delivery-tracker/internal/order/application"
-	orderinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/order/infrastructure"
-	restaurantinfra "github.com/daichitsuchiya/food-delivery-tracker/internal/restaurant/infrastructure"
-	"github.com/daichitsuchiya/food-delivery-tracker/internal/shared/events"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/postgres"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/simulator"
+	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
+	orderinfra "github.com/tsucchinoko/food-delivery-tracker/internal/order/infrastructure"
+	restaurantinfra "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/infrastructure"
+	"github.com/tsucchinoko/food-delivery-tracker/internal/shared/events"
 )
 
 func main() {
@@ -23,24 +23,24 @@ func main() {
 
 	log.Println("[simulator] starting...")
 
-	// Connect to PostgreSQL
+	// PostgreSQLに接続
 	pool, err := postgres.NewPool(ctx, postgres.DefaultConfig())
 	if err != nil {
 		log.Fatalf("[simulator] failed to connect to database: %v", err)
 	}
 	defer pool.Close()
 
-	// Set up event bus (in-memory for Phase 1)
+	// イベントバスのセットアップ（Phase 1ではインメモリ）
 	bus := events.NewInMemoryBus()
 
-	// Set up repositories
+	// リポジトリのセットアップ
 	orderRepo := orderinfra.NewPostgresOrderRepository(pool)
 	restaurantRepo := restaurantinfra.NewPostgresRestaurantRepository(pool)
 
-	// Set up services
+	// サービスのセットアップ
 	orderService := orderapp.NewOrderService(orderRepo, bus.Publish)
 
-	// Seed restaurants
+	// レストランのシードデータ投入
 	restaurants := simulator.SeedRestaurants()
 	for _, r := range restaurants {
 		if err := restaurantRepo.Save(ctx, r); err != nil {
@@ -49,7 +49,7 @@ func main() {
 	}
 	log.Printf("[simulator] seeded %d restaurants", len(restaurants))
 
-	// Load restaurants from DB (to get consistent IDs)
+	// DBからレストランを読み込み（一貫したIDを取得するため）
 	dbRestaurants, err := restaurantRepo.FindAll(ctx)
 	if err != nil {
 		log.Fatalf("[simulator] failed to load restaurants: %v", err)
@@ -57,10 +57,10 @@ func main() {
 
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	// Start state transition goroutine
+	// ステート遷移ゴルーチンを開始
 	go simulator.RunStateTransitions(ctx, rng, orderService, 0.05) // 5% cancel rate
 
-	// Generate random orders periodically
+	// 定期的にランダムな注文を生成
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 

@@ -2,63 +2,63 @@ package types
 
 import "fmt"
 
-// Money represents a monetary amount in the smallest unit (cents) to avoid floating-point issues.
-// Money is a value object — all operations return new instances.
+// Money は浮動小数点の問題を避けるため、最小単位（銭）で金額を表す値オブジェクト。
+// Money は値オブジェクトであり、すべての操作は新しいインスタンスを返す。
 type Money struct {
 	amount   int64
 	currency string
 }
 
-// NewMoney creates a Money value object.
+// NewMoney は Money 値オブジェクトを生成する。
 func NewMoney(amount int64, currency string) Money {
 	return Money{amount: amount, currency: currency}
 }
 
-// JPY creates a Money value in Japanese Yen.
+// JPY は日本円の Money 値を生成する。
 func JPY(amount int64) Money {
 	return Money{amount: amount, currency: "JPY"}
 }
 
-// Amount returns the raw amount in smallest unit.
+// Amount は最小単位での生の金額を返す。
 func (m Money) Amount() int64 { return m.amount }
 
-// Currency returns the currency code.
+// Currency は通貨コードを返す。
 func (m Money) Currency() string { return m.currency }
 
-// Add returns a new Money that is the sum of m and other.
-// Panics if currencies don't match.
+// Add は m と other の合計を表す新しい Money を返す。
+// 通貨が一致しない場合はパニックする。
 func (m Money) Add(other Money) Money {
 	m.assertSameCurrency(other)
 	return Money{amount: m.amount + other.amount, currency: m.currency}
 }
 
-// Subtract returns a new Money that is m minus other.
+// Subtract は m から other を引いた新しい Money を返す。
 func (m Money) Subtract(other Money) Money {
 	m.assertSameCurrency(other)
 	return Money{amount: m.amount - other.amount, currency: m.currency}
 }
 
-// Multiply returns a new Money multiplied by the quantity.
+// Multiply は数量を乗算した新しい Money を返す。
 func (m Money) Multiply(quantity int) Money {
 	return Money{amount: m.amount * int64(quantity), currency: m.currency}
 }
 
-// IsZero returns true if the amount is zero.
+// IsZero は金額がゼロの場合に true を返す。
 func (m Money) IsZero() bool {
 	return m.amount == 0
 }
 
-// IsPositive returns true if the amount is greater than zero.
+// IsPositive は金額がゼロより大きい場合に true を返す。
 func (m Money) IsPositive() bool {
 	return m.amount > 0
 }
 
-// Equal returns true if both Money values are identical.
+// Equal は両方の Money 値が等しい場合に true を返す。
 func (m Money) Equal(other Money) bool {
 	return m.amount == other.amount && m.currency == other.currency
 }
 
-// String returns a human-readable representation.
+// String は人間が読みやすい表現を返す。
 func (m Money) String() string {
 	if m.currency == "JPY" {
 		return fmt.Sprintf("¥%d", m.amount)

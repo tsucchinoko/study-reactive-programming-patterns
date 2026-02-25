@@ -8,9 +8,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// WithTransaction executes fn within a database transaction.
-// If fn returns an error, the transaction is rolled back.
-// This is a functional wrapper — the caller passes pure logic, this function handles the side effects.
+// WithTransaction はデータベーストランザクション内でfnを実行する。
+// fnがエラーを返した場合、トランザクションはロールバックされる。
+// 関数型ラッパー — 呼び出し側が純粋なロジックを渡し、この関数が副作用を処理する。
 func WithTransaction[T any](ctx context.Context, pool *pgxpool.Pool, fn func(tx pgx.Tx) (T, error)) (T, error) {
 	tx, err := pool.Begin(ctx)
 	if err != nil {
