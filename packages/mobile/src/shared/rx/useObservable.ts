@@ -23,16 +23,20 @@ type ObservableState<T> =
  * @param deps     依存配列（useEffectと同じセマンティクス）。
  */
 export function useObservable<T>(
-  factory: () => Observable<T>,
+  factory: () => Observable<T> | null,
   deps: React.DependencyList,
 ): ObservableState<T> {
   const [state, setState] = useState<ObservableState<T>>({ status: "idle" });
   const subscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
-    setState({ status: "loading" });
-
     const observable$ = factory();
+    if (!observable$) {
+      setState({ status: "idle" });
+      return;
+    }
+
+    setState({ status: "loading" });
     subscriptionRef.current = observable$.subscribe({
       next: (data) => setState({ status: "success", data }),
       error: (error) => setState({ status: "error", error }),
