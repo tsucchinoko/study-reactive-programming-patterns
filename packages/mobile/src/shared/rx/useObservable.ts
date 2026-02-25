@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Observable, Subscription } from "rxjs";
 
+/**
+ * Observableの購読状態を表す判別共用体（Discriminated Union）。
+ *
+ * - `idle`    — まだsubscribeしていない初期状態
+ * - `loading` — subscribe済みだがデータ未着
+ * - `success` — データ到着済み
+ * - `error`   — エラー発生
+ */
 type ObservableState<T> =
   | { status: "idle" }
   | { status: "loading" }
@@ -16,7 +24,7 @@ type ObservableState<T> =
  */
 export function useObservable<T>(
   factory: () => Observable<T>,
-  deps: React.DependencyList
+  deps: React.DependencyList,
 ): ObservableState<T> {
   const [state, setState] = useState<ObservableState<T>>({ status: "idle" });
   const subscriptionRef = useRef<Subscription | null>(null);
