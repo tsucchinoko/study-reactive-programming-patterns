@@ -31,15 +31,14 @@ func transitionDelay(rng *rand.Rand, status orderdomain.OrderStatus) time.Durati
 }
 
 // nextStatus はシミュレーション用の次の正常系ステータスを返す。
+// READY 以降は DeliveryFlowSimulator が処理するため、ここでは READY まで進める。
 // 純粋関数。
 func nextStatus(current orderdomain.OrderStatus) (orderdomain.OrderStatus, bool) {
 	transitions := map[orderdomain.OrderStatus]orderdomain.OrderStatus{
-		orderdomain.StatusCreated:    orderdomain.StatusConfirmed,
-		orderdomain.StatusConfirmed:  orderdomain.StatusPreparing,
-		orderdomain.StatusPreparing:  orderdomain.StatusReady,
-		orderdomain.StatusReady:      orderdomain.StatusPickedUp,
-		orderdomain.StatusPickedUp:   orderdomain.StatusDelivering,
-		orderdomain.StatusDelivering: orderdomain.StatusDelivered,
+		orderdomain.StatusCreated:   orderdomain.StatusConfirmed,
+		orderdomain.StatusConfirmed: orderdomain.StatusPreparing,
+		orderdomain.StatusPreparing: orderdomain.StatusReady,
+		// READY 以降は DeliveryFlowSimulator が PICKED_UP → DELIVERING → DELIVERED を処理
 	}
 	next, ok := transitions[current]
 	return next, ok

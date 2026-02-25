@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"time"
 
+	deliveryapp "github.com/tsucchinoko/food-delivery-tracker/internal/delivery/application"
 	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
 	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
 	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
@@ -159,6 +160,39 @@ func (r *queryResolver) Restaurants(ctx context.Context) ([]*generated.Restauran
 	return toGQLRestaurants(restaurants), nil
 }
 
+// Driver はdriverフィールドのリゾルバ。
+func (r *queryResolver) Driver(ctx context.Context, id string) (*generated.Driver, error) {
+	driverID, err := types.ParseDriverID(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid driver ID: %w", err)
+	}
+	driver, err := r.DeliveryService.GetDriver(ctx, deliveryapp.GetDriverQuery{DriverID: driverID})
+	if err != nil {
+		return nil, err
+	}
+	return toGQLDriver(driver), nil
+}
+
+// DeliveryByOrder はdeliveryByOrderフィールドのリゾルバ。
+func (r *queryResolver) DeliveryByOrder(ctx context.Context, orderID string) (*generated.DeliveryAssignment, error) {
+	oID, err := types.ParseOrderID(orderID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid order ID: %w", err)
+	}
+	assignment, err := r.DeliveryService.GetAssignmentByOrder(ctx, deliveryapp.GetAssignmentByOrderQuery{OrderID: oID})
+	if err != nil {
+		return nil, err
+	}
+
+	// ドライバー情報も取得
+	driver, err := r.DeliveryService.GetDriver(ctx, deliveryapp.GetDriverQuery{DriverID: assignment.DriverID()})
+	if err != nil {
+		return nil, err
+	}
+
+	return toGQLAssignment(assignment, &driver), nil
+}
+
 // OrderStatusChanged はorderStatusChangedフィールドのリゾルバ。
 func (r *subscriptionResolver) OrderStatusChanged(ctx context.Context, orderID string) (<-chan *generated.Order, error) {
 	subscriberID := fmt.Sprintf("sub-%s-%d", orderID, time.Now().UnixNano())
@@ -173,13 +207,27 @@ func (r *subscriptionResolver) OrderStatusChanged(ctx context.Context, orderID s
 	return ch, nil
 }
 
-// Mutation はMutationResolverの実装を返す。
+// DriverLocationUpdated はdriverLocationUpdatedフィールドのリゾルバ。
+func (r *subscriptionResolver) DriverLocationUpdated(ctx context.Context, driverID string) (<-chan *generated.DriverLocation, error) {
+	subscriberID := fmt.Sprintf("loc-%s-%d", driverID, time.Now().UnixNano())
+	ch, unsubscribe := r.SubscriptionMgr.SubscribeDriverLocation(driverID, subscriberID)
+
+	// クライアント切断時にクリーンアップ
+	go func() {
+		<-ctx.Done()
+		unsubscribe()
+	}()
+
+	return ch, nil
+}
+
+// Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
-// Query はQueryResolverの実装を返す。
+// Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-// Subscription はSubscriptionResolverの実装を返す。
+// Subscription returns generated.SubscriptionResolver implementation.
 func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
 
 type mutationResolver struct{ *Resolver }

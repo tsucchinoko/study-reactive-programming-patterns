@@ -103,6 +103,18 @@ func (id DriverID) UUID() uuid.UUID { return id.value }
 // NewAssignmentID は新しいランダムな AssignmentID を生成する。
 func NewAssignmentID() AssignmentID { return AssignmentID{value: uuid.New()} }
 
+// AssignmentIDFrom は既存の UUID から AssignmentID を生成する。
+func AssignmentIDFrom(id uuid.UUID) AssignmentID { return AssignmentID{value: id} }
+
+// ParseAssignmentID は文字列を AssignmentID にパースする。
+func ParseAssignmentID(s string) (AssignmentID, error) {
+	id, err := uuid.Parse(s)
+	if err != nil {
+		return AssignmentID{}, err
+	}
+	return AssignmentID{value: id}, nil
+}
+
 func (id AssignmentID) String() string  { return id.value.String() }
 func (id AssignmentID) UUID() uuid.UUID { return id.value }
 

@@ -47,6 +47,32 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	DeliveryAssignment struct {
+		AssignedAt  func(childComplexity int) int
+		DeliveredAt func(childComplexity int) int
+		Driver      func(childComplexity int) int
+		DriverID    func(childComplexity int) int
+		ID          func(childComplexity int) int
+		OrderID     func(childComplexity int) int
+		PickedUpAt  func(childComplexity int) int
+		Status      func(childComplexity int) int
+	}
+
+	Driver struct {
+		CurrentLocation func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Name            func(childComplexity int) int
+		Phone           func(childComplexity int) int
+		Status          func(childComplexity int) int
+	}
+
+	DriverLocation struct {
+		DriverID  func(childComplexity int) int
+		Latitude  func(childComplexity int) int
+		Longitude func(childComplexity int) int
+		Timestamp func(childComplexity int) int
+	}
+
 	Location struct {
 		Address func(childComplexity int) int
 		Lat     func(childComplexity int) int
@@ -105,11 +131,13 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Order          func(childComplexity int, id string) int
-		Orders         func(childComplexity int, limit *int, offset *int) int
-		OrdersByStatus func(childComplexity int, status OrderStatus) int
-		Restaurant     func(childComplexity int, id string) int
-		Restaurants    func(childComplexity int) int
+		DeliveryByOrder func(childComplexity int, orderID string) int
+		Driver          func(childComplexity int, id string) int
+		Order           func(childComplexity int, id string) int
+		Orders          func(childComplexity int, limit *int, offset *int) int
+		OrdersByStatus  func(childComplexity int, status OrderStatus) int
+		Restaurant      func(childComplexity int, id string) int
+		Restaurants     func(childComplexity int) int
 	}
 
 	Restaurant struct {
@@ -122,7 +150,8 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		OrderStatusChanged func(childComplexity int, orderID string) int
+		DriverLocationUpdated func(childComplexity int, driverID string) int
+		OrderStatusChanged    func(childComplexity int, orderID string) int
 	}
 }
 
@@ -138,9 +167,12 @@ type QueryResolver interface {
 	OrdersByStatus(ctx context.Context, status OrderStatus) ([]*Order, error)
 	Restaurant(ctx context.Context, id string) (*Restaurant, error)
 	Restaurants(ctx context.Context) ([]*Restaurant, error)
+	Driver(ctx context.Context, id string) (*Driver, error)
+	DeliveryByOrder(ctx context.Context, orderID string) (*DeliveryAssignment, error)
 }
 type SubscriptionResolver interface {
 	OrderStatusChanged(ctx context.Context, orderID string) (<-chan *Order, error)
+	DriverLocationUpdated(ctx context.Context, driverID string) (<-chan *DriverLocation, error)
 }
 
 type executableSchema struct {
@@ -161,6 +193,111 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "DeliveryAssignment.assignedAt":
+		if e.complexity.DeliveryAssignment.AssignedAt == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.AssignedAt(childComplexity), true
+	case "DeliveryAssignment.deliveredAt":
+		if e.complexity.DeliveryAssignment.DeliveredAt == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.DeliveredAt(childComplexity), true
+	case "DeliveryAssignment.driver":
+		if e.complexity.DeliveryAssignment.Driver == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.Driver(childComplexity), true
+	case "DeliveryAssignment.driverId":
+		if e.complexity.DeliveryAssignment.DriverID == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.DriverID(childComplexity), true
+	case "DeliveryAssignment.id":
+		if e.complexity.DeliveryAssignment.ID == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.ID(childComplexity), true
+	case "DeliveryAssignment.orderId":
+		if e.complexity.DeliveryAssignment.OrderID == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.OrderID(childComplexity), true
+	case "DeliveryAssignment.pickedUpAt":
+		if e.complexity.DeliveryAssignment.PickedUpAt == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.PickedUpAt(childComplexity), true
+	case "DeliveryAssignment.status":
+		if e.complexity.DeliveryAssignment.Status == nil {
+			break
+		}
+
+		return e.complexity.DeliveryAssignment.Status(childComplexity), true
+
+	case "Driver.currentLocation":
+		if e.complexity.Driver.CurrentLocation == nil {
+			break
+		}
+
+		return e.complexity.Driver.CurrentLocation(childComplexity), true
+	case "Driver.id":
+		if e.complexity.Driver.ID == nil {
+			break
+		}
+
+		return e.complexity.Driver.ID(childComplexity), true
+	case "Driver.name":
+		if e.complexity.Driver.Name == nil {
+			break
+		}
+
+		return e.complexity.Driver.Name(childComplexity), true
+	case "Driver.phone":
+		if e.complexity.Driver.Phone == nil {
+			break
+		}
+
+		return e.complexity.Driver.Phone(childComplexity), true
+	case "Driver.status":
+		if e.complexity.Driver.Status == nil {
+			break
+		}
+
+		return e.complexity.Driver.Status(childComplexity), true
+
+	case "DriverLocation.driverId":
+		if e.complexity.DriverLocation.DriverID == nil {
+			break
+		}
+
+		return e.complexity.DriverLocation.DriverID(childComplexity), true
+	case "DriverLocation.latitude":
+		if e.complexity.DriverLocation.Latitude == nil {
+			break
+		}
+
+		return e.complexity.DriverLocation.Latitude(childComplexity), true
+	case "DriverLocation.longitude":
+		if e.complexity.DriverLocation.Longitude == nil {
+			break
+		}
+
+		return e.complexity.DriverLocation.Longitude(childComplexity), true
+	case "DriverLocation.timestamp":
+		if e.complexity.DriverLocation.Timestamp == nil {
+			break
+		}
+
+		return e.complexity.DriverLocation.Timestamp(childComplexity), true
 
 	case "Location.address":
 		if e.complexity.Location.Address == nil {
@@ -405,6 +542,28 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.OrderItem.UnitPrice(childComplexity), true
 
+	case "Query.deliveryByOrder":
+		if e.complexity.Query.DeliveryByOrder == nil {
+			break
+		}
+
+		args, err := ec.field_Query_deliveryByOrder_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DeliveryByOrder(childComplexity, args["orderId"].(string)), true
+	case "Query.driver":
+		if e.complexity.Query.Driver == nil {
+			break
+		}
+
+		args, err := ec.field_Query_driver_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Driver(childComplexity, args["id"].(string)), true
 	case "Query.order":
 		if e.complexity.Query.Order == nil {
 			break
@@ -493,6 +652,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Restaurant.Name(childComplexity), true
 
+	case "Subscription.driverLocationUpdated":
+		if e.complexity.Subscription.DriverLocationUpdated == nil {
+			break
+		}
+
+		args, err := ec.field_Subscription_driverLocationUpdated_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Subscription.DriverLocationUpdated(childComplexity, args["driverId"].(string)), true
 	case "Subscription.orderStatusChanged":
 		if e.complexity.Subscription.OrderStatusChanged == nil {
 			break
@@ -705,6 +875,41 @@ type Restaurant {
   isOpen: Boolean!
 }
 
+# --- Delivery types ---
+
+enum DriverStatus {
+  AVAILABLE
+  ASSIGNED
+  DELIVERING
+  OFFLINE
+}
+
+type Driver {
+  id: ID!
+  name: String!
+  phone: String!
+  status: DriverStatus!
+  currentLocation: Location!
+}
+
+type DeliveryAssignment {
+  id: ID!
+  orderId: ID!
+  driverId: ID!
+  driver: Driver
+  status: String!
+  assignedAt: DateTime!
+  pickedUpAt: DateTime
+  deliveredAt: DateTime
+}
+
+type DriverLocation {
+  driverId: ID!
+  latitude: Float!
+  longitude: Float!
+  timestamp: DateTime!
+}
+
 # --- Inputs ---
 
 input PlaceOrderItemInput {
@@ -729,6 +934,8 @@ type Query {
   ordersByStatus(status: OrderStatus!): [Order!]!
   restaurant(id: ID!): Restaurant
   restaurants: [Restaurant!]!
+  driver(id: ID!): Driver
+  deliveryByOrder(orderId: ID!): DeliveryAssignment
 }
 
 # --- Mutations ---
@@ -740,10 +947,11 @@ type Mutation {
   transitionOrder(orderId: ID!, newStatus: OrderStatus!): Order!
 }
 
-# --- Subscriptions (Phase 2) ---
+# --- Subscriptions ---
 
 type Subscription {
   orderStatusChanged(orderId: ID!): Order!
+  driverLocationUpdated(driverId: ID!): DriverLocation!
 }
 `, BuiltIn: false},
 }
@@ -783,7 +991,7 @@ func (ec *executionContext) field_Mutation_confirmOrder_args(ctx context.Context
 func (ec *executionContext) field_Mutation_placeOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNPlaceOrderInput2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderInput)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNPlaceOrderInput2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderInput)
 	if err != nil {
 		return nil, err
 	}
@@ -799,7 +1007,7 @@ func (ec *executionContext) field_Mutation_transitionOrder_args(ctx context.Cont
 		return nil, err
 	}
 	args["orderId"] = arg0
-	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "newStatus", ec.unmarshalNOrderStatus2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus)
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "newStatus", ec.unmarshalNOrderStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus)
 	if err != nil {
 		return nil, err
 	}
@@ -818,6 +1026,28 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_deliveryByOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "orderId", ec.unmarshalNID2string)
+	if err != nil {
+		return nil, err
+	}
+	args["orderId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_driver_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_order_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -832,7 +1062,7 @@ func (ec *executionContext) field_Query_order_args(ctx context.Context, rawArgs 
 func (ec *executionContext) field_Query_ordersByStatus_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "status", ec.unmarshalNOrderStatus2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "status", ec.unmarshalNOrderStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus)
 	if err != nil {
 		return nil, err
 	}
@@ -864,6 +1094,17 @@ func (ec *executionContext) field_Query_restaurant_args(ctx context.Context, raw
 		return nil, err
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Subscription_driverLocationUpdated_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "driverId", ec.unmarshalNID2string)
+	if err != nil {
+		return nil, err
+	}
+	args["driverId"] = arg0
 	return args, nil
 }
 
@@ -929,6 +1170,519 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _DeliveryAssignment_id(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_orderId(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_orderId,
+		func(ctx context.Context) (any, error) {
+			return obj.OrderID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_orderId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_driverId(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_driverId,
+		func(ctx context.Context) (any, error) {
+			return obj.DriverID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_driverId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_driver(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_driver,
+		func(ctx context.Context) (any, error) {
+			return obj.Driver, nil
+		},
+		nil,
+		ec.marshalODriver2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriver,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_driver(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Driver_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Driver_name(ctx, field)
+			case "phone":
+				return ec.fieldContext_Driver_phone(ctx, field)
+			case "status":
+				return ec.fieldContext_Driver_status(ctx, field)
+			case "currentLocation":
+				return ec.fieldContext_Driver_currentLocation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Driver", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_status(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_status,
+		func(ctx context.Context) (any, error) {
+			return obj.Status, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_status(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_assignedAt(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_assignedAt,
+		func(ctx context.Context) (any, error) {
+			return obj.AssignedAt, nil
+		},
+		nil,
+		ec.marshalNDateTime2timeᚐTime,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_assignedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_pickedUpAt(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_pickedUpAt,
+		func(ctx context.Context) (any, error) {
+			return obj.PickedUpAt, nil
+		},
+		nil,
+		ec.marshalODateTime2ᚖtimeᚐTime,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_pickedUpAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeliveryAssignment_deliveredAt(ctx context.Context, field graphql.CollectedField, obj *DeliveryAssignment) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DeliveryAssignment_deliveredAt,
+		func(ctx context.Context) (any, error) {
+			return obj.DeliveredAt, nil
+		},
+		nil,
+		ec.marshalODateTime2ᚖtimeᚐTime,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_DeliveryAssignment_deliveredAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeliveryAssignment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Driver_id(ctx context.Context, field graphql.CollectedField, obj *Driver) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Driver_id,
+		func(ctx context.Context) (any, error) {
+			return obj.ID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Driver_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Driver",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Driver_name(ctx context.Context, field graphql.CollectedField, obj *Driver) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Driver_name,
+		func(ctx context.Context) (any, error) {
+			return obj.Name, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Driver_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Driver",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Driver_phone(ctx context.Context, field graphql.CollectedField, obj *Driver) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Driver_phone,
+		func(ctx context.Context) (any, error) {
+			return obj.Phone, nil
+		},
+		nil,
+		ec.marshalNString2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Driver_phone(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Driver",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Driver_status(ctx context.Context, field graphql.CollectedField, obj *Driver) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Driver_status,
+		func(ctx context.Context) (any, error) {
+			return obj.Status, nil
+		},
+		nil,
+		ec.marshalNDriverStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverStatus,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Driver_status(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Driver",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DriverStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Driver_currentLocation(ctx context.Context, field graphql.CollectedField, obj *Driver) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Driver_currentLocation,
+		func(ctx context.Context) (any, error) {
+			return obj.CurrentLocation, nil
+		},
+		nil,
+		ec.marshalNLocation2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐLocation,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Driver_currentLocation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Driver",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "lat":
+				return ec.fieldContext_Location_lat(ctx, field)
+			case "lng":
+				return ec.fieldContext_Location_lng(ctx, field)
+			case "address":
+				return ec.fieldContext_Location_address(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Location", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DriverLocation_driverId(ctx context.Context, field graphql.CollectedField, obj *DriverLocation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DriverLocation_driverId,
+		func(ctx context.Context) (any, error) {
+			return obj.DriverID, nil
+		},
+		nil,
+		ec.marshalNID2string,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DriverLocation_driverId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DriverLocation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DriverLocation_latitude(ctx context.Context, field graphql.CollectedField, obj *DriverLocation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DriverLocation_latitude,
+		func(ctx context.Context) (any, error) {
+			return obj.Latitude, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DriverLocation_latitude(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DriverLocation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DriverLocation_longitude(ctx context.Context, field graphql.CollectedField, obj *DriverLocation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DriverLocation_longitude,
+		func(ctx context.Context) (any, error) {
+			return obj.Longitude, nil
+		},
+		nil,
+		ec.marshalNFloat2float64,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DriverLocation_longitude(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DriverLocation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DriverLocation_timestamp(ctx context.Context, field graphql.CollectedField, obj *DriverLocation) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_DriverLocation_timestamp,
+		func(ctx context.Context) (any, error) {
+			return obj.Timestamp, nil
+		},
+		nil,
+		ec.marshalNDateTime2timeᚐTime,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_DriverLocation_timestamp(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DriverLocation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _Location_lat(ctx context.Context, field graphql.CollectedField, obj *Location) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
@@ -1056,7 +1810,7 @@ func (ec *executionContext) _Menu_items(ctx context.Context, field graphql.Colle
 			return obj.Items, nil
 		},
 		nil,
-		ec.marshalNMenuItem2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItemᚄ,
+		ec.marshalNMenuItem2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItemᚄ,
 		true,
 		true,
 	)
@@ -1186,7 +1940,7 @@ func (ec *executionContext) _MenuItem_price(ctx context.Context, field graphql.C
 			return obj.Price, nil
 		},
 		nil,
-		ec.marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
+		ec.marshalNMoney2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
 		true,
 		true,
 	)
@@ -1369,7 +2123,7 @@ func (ec *executionContext) _Mutation_placeOrder(ctx context.Context, field grap
 			return ec.resolvers.Mutation().PlaceOrder(ctx, fc.Args["input"].(PlaceOrderInput))
 		},
 		nil,
-		ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		true,
 	)
@@ -1436,7 +2190,7 @@ func (ec *executionContext) _Mutation_confirmOrder(ctx context.Context, field gr
 			return ec.resolvers.Mutation().ConfirmOrder(ctx, fc.Args["orderId"].(string))
 		},
 		nil,
-		ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		true,
 	)
@@ -1503,7 +2257,7 @@ func (ec *executionContext) _Mutation_cancelOrder(ctx context.Context, field gra
 			return ec.resolvers.Mutation().CancelOrder(ctx, fc.Args["orderId"].(string), fc.Args["reason"].(string))
 		},
 		nil,
-		ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		true,
 	)
@@ -1570,7 +2324,7 @@ func (ec *executionContext) _Mutation_transitionOrder(ctx context.Context, field
 			return ec.resolvers.Mutation().TransitionOrder(ctx, fc.Args["orderId"].(string), fc.Args["newStatus"].(OrderStatus))
 		},
 		nil,
-		ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		true,
 	)
@@ -1723,7 +2477,7 @@ func (ec *executionContext) _Order_restaurant(ctx context.Context, field graphql
 			return obj.Restaurant, nil
 		},
 		nil,
-		ec.marshalORestaurant2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant,
+		ec.marshalORestaurant2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant,
 		true,
 		false,
 	)
@@ -1766,7 +2520,7 @@ func (ec *executionContext) _Order_items(ctx context.Context, field graphql.Coll
 			return obj.Items, nil
 		},
 		nil,
-		ec.marshalNOrderItem2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItemᚄ,
+		ec.marshalNOrderItem2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItemᚄ,
 		true,
 		true,
 	)
@@ -1809,7 +2563,7 @@ func (ec *executionContext) _Order_status(ctx context.Context, field graphql.Col
 			return obj.Status, nil
 		},
 		nil,
-		ec.marshalNOrderStatus2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus,
+		ec.marshalNOrderStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus,
 		true,
 		true,
 	)
@@ -1838,7 +2592,7 @@ func (ec *executionContext) _Order_total(ctx context.Context, field graphql.Coll
 			return obj.Total, nil
 		},
 		nil,
-		ec.marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
+		ec.marshalNMoney2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
 		true,
 		true,
 	)
@@ -2107,7 +2861,7 @@ func (ec *executionContext) _OrderItem_unitPrice(ctx context.Context, field grap
 			return obj.UnitPrice, nil
 		},
 		nil,
-		ec.marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
+		ec.marshalNMoney2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
 		true,
 		true,
 	)
@@ -2173,7 +2927,7 @@ func (ec *executionContext) _OrderItem_subtotal(ctx context.Context, field graph
 			return obj.Subtotal, nil
 		},
 		nil,
-		ec.marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
+		ec.marshalNMoney2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney,
 		true,
 		true,
 	)
@@ -2211,7 +2965,7 @@ func (ec *executionContext) _Query_order(ctx context.Context, field graphql.Coll
 			return ec.resolvers.Query().Order(ctx, fc.Args["id"].(string))
 		},
 		nil,
-		ec.marshalOOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalOOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		false,
 	)
@@ -2278,7 +3032,7 @@ func (ec *executionContext) _Query_orders(ctx context.Context, field graphql.Col
 			return ec.resolvers.Query().Orders(ctx, fc.Args["limit"].(*int), fc.Args["offset"].(*int))
 		},
 		nil,
-		ec.marshalNOrder2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ,
+		ec.marshalNOrder2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ,
 		true,
 		true,
 	)
@@ -2345,7 +3099,7 @@ func (ec *executionContext) _Query_ordersByStatus(ctx context.Context, field gra
 			return ec.resolvers.Query().OrdersByStatus(ctx, fc.Args["status"].(OrderStatus))
 		},
 		nil,
-		ec.marshalNOrder2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ,
+		ec.marshalNOrder2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ,
 		true,
 		true,
 	)
@@ -2412,7 +3166,7 @@ func (ec *executionContext) _Query_restaurant(ctx context.Context, field graphql
 			return ec.resolvers.Query().Restaurant(ctx, fc.Args["id"].(string))
 		},
 		nil,
-		ec.marshalORestaurant2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant,
+		ec.marshalORestaurant2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant,
 		true,
 		false,
 	)
@@ -2466,7 +3220,7 @@ func (ec *executionContext) _Query_restaurants(ctx context.Context, field graphq
 			return ec.resolvers.Query().Restaurants(ctx)
 		},
 		nil,
-		ec.marshalNRestaurant2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurantᚄ,
+		ec.marshalNRestaurant2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurantᚄ,
 		true,
 		true,
 	)
@@ -2495,6 +3249,118 @@ func (ec *executionContext) fieldContext_Query_restaurants(_ context.Context, fi
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Restaurant", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_driver(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_driver,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().Driver(ctx, fc.Args["id"].(string))
+		},
+		nil,
+		ec.marshalODriver2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriver,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_driver(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Driver_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Driver_name(ctx, field)
+			case "phone":
+				return ec.fieldContext_Driver_phone(ctx, field)
+			case "status":
+				return ec.fieldContext_Driver_status(ctx, field)
+			case "currentLocation":
+				return ec.fieldContext_Driver_currentLocation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Driver", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_driver_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_deliveryByOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_deliveryByOrder,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().DeliveryByOrder(ctx, fc.Args["orderId"].(string))
+		},
+		nil,
+		ec.marshalODeliveryAssignment2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDeliveryAssignment,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_deliveryByOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_DeliveryAssignment_id(ctx, field)
+			case "orderId":
+				return ec.fieldContext_DeliveryAssignment_orderId(ctx, field)
+			case "driverId":
+				return ec.fieldContext_DeliveryAssignment_driverId(ctx, field)
+			case "driver":
+				return ec.fieldContext_DeliveryAssignment_driver(ctx, field)
+			case "status":
+				return ec.fieldContext_DeliveryAssignment_status(ctx, field)
+			case "assignedAt":
+				return ec.fieldContext_DeliveryAssignment_assignedAt(ctx, field)
+			case "pickedUpAt":
+				return ec.fieldContext_DeliveryAssignment_pickedUpAt(ctx, field)
+			case "deliveredAt":
+				return ec.fieldContext_DeliveryAssignment_deliveredAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeliveryAssignment", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_deliveryByOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -2704,7 +3570,7 @@ func (ec *executionContext) _Restaurant_location(ctx context.Context, field grap
 			return obj.Location, nil
 		},
 		nil,
-		ec.marshalNLocation2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐLocation,
+		ec.marshalNLocation2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐLocation,
 		true,
 		true,
 	)
@@ -2741,7 +3607,7 @@ func (ec *executionContext) _Restaurant_menu(ctx context.Context, field graphql.
 			return obj.Menu, nil
 		},
 		nil,
-		ec.marshalNMenu2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenu,
+		ec.marshalNMenu2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenu,
 		true,
 		true,
 	)
@@ -2806,7 +3672,7 @@ func (ec *executionContext) _Subscription_orderStatusChanged(ctx context.Context
 			return ec.resolvers.Subscription().OrderStatusChanged(ctx, fc.Args["orderId"].(string))
 		},
 		nil,
-		ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
+		ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder,
 		true,
 		true,
 	)
@@ -2856,6 +3722,57 @@ func (ec *executionContext) fieldContext_Subscription_orderStatusChanged(ctx con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Subscription_orderStatusChanged_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Subscription_driverLocationUpdated(ctx context.Context, field graphql.CollectedField) (ret func(ctx context.Context) graphql.Marshaler) {
+	return graphql.ResolveFieldStream(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Subscription_driverLocationUpdated,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Subscription().DriverLocationUpdated(ctx, fc.Args["driverId"].(string))
+		},
+		nil,
+		ec.marshalNDriverLocation2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverLocation,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Subscription_driverLocationUpdated(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Subscription",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "driverId":
+				return ec.fieldContext_DriverLocation_driverId(ctx, field)
+			case "latitude":
+				return ec.fieldContext_DriverLocation_latitude(ctx, field)
+			case "longitude":
+				return ec.fieldContext_DriverLocation_longitude(ctx, field)
+			case "timestamp":
+				return ec.fieldContext_DriverLocation_timestamp(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DriverLocation", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Subscription_driverLocationUpdated_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4338,7 +5255,7 @@ func (ec *executionContext) unmarshalInputPlaceOrderInput(ctx context.Context, o
 			it.RestaurantID = data
 		case "items":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("items"))
-			data, err := ec.unmarshalNPlaceOrderItemInput2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInputᚄ(ctx, v)
+			data, err := ec.unmarshalNPlaceOrderItemInput2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4411,6 +5328,184 @@ func (ec *executionContext) unmarshalInputPlaceOrderItemInput(ctx context.Contex
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var deliveryAssignmentImplementors = []string{"DeliveryAssignment"}
+
+func (ec *executionContext) _DeliveryAssignment(ctx context.Context, sel ast.SelectionSet, obj *DeliveryAssignment) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deliveryAssignmentImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeliveryAssignment")
+		case "id":
+			out.Values[i] = ec._DeliveryAssignment_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "orderId":
+			out.Values[i] = ec._DeliveryAssignment_orderId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "driverId":
+			out.Values[i] = ec._DeliveryAssignment_driverId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "driver":
+			out.Values[i] = ec._DeliveryAssignment_driver(ctx, field, obj)
+		case "status":
+			out.Values[i] = ec._DeliveryAssignment_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "assignedAt":
+			out.Values[i] = ec._DeliveryAssignment_assignedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "pickedUpAt":
+			out.Values[i] = ec._DeliveryAssignment_pickedUpAt(ctx, field, obj)
+		case "deliveredAt":
+			out.Values[i] = ec._DeliveryAssignment_deliveredAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var driverImplementors = []string{"Driver"}
+
+func (ec *executionContext) _Driver(ctx context.Context, sel ast.SelectionSet, obj *Driver) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, driverImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Driver")
+		case "id":
+			out.Values[i] = ec._Driver_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._Driver_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "phone":
+			out.Values[i] = ec._Driver_phone(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "status":
+			out.Values[i] = ec._Driver_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "currentLocation":
+			out.Values[i] = ec._Driver_currentLocation(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var driverLocationImplementors = []string{"DriverLocation"}
+
+func (ec *executionContext) _DriverLocation(ctx context.Context, sel ast.SelectionSet, obj *DriverLocation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, driverLocationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DriverLocation")
+		case "driverId":
+			out.Values[i] = ec._DriverLocation_driverId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "latitude":
+			out.Values[i] = ec._DriverLocation_latitude(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "longitude":
+			out.Values[i] = ec._DriverLocation_longitude(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "timestamp":
+			out.Values[i] = ec._DriverLocation_timestamp(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
 
 var locationImplementors = []string{"Location"}
 
@@ -4954,6 +6049,44 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "driver":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_driver(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "deliveryByOrder":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_deliveryByOrder(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -5064,6 +6197,8 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 	switch fields[0].Name {
 	case "orderStatusChanged":
 		return ec._Subscription_orderStatusChanged(ctx, fields[0])
+	case "driverLocationUpdated":
+		return ec._Subscription_driverLocationUpdated(ctx, fields[0])
 	default:
 		panic("unknown field " + strconv.Quote(fields[0].Name))
 	}
@@ -5436,6 +6571,30 @@ func (ec *executionContext) marshalNDateTime2timeᚐTime(ctx context.Context, se
 	return res
 }
 
+func (ec *executionContext) marshalNDriverLocation2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverLocation(ctx context.Context, sel ast.SelectionSet, v DriverLocation) graphql.Marshaler {
+	return ec._DriverLocation(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDriverLocation2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverLocation(ctx context.Context, sel ast.SelectionSet, v *DriverLocation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._DriverLocation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNDriverStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverStatus(ctx context.Context, v any) (DriverStatus, error) {
+	var res DriverStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDriverStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriverStatus(ctx context.Context, sel ast.SelectionSet, v DriverStatus) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v any) (float64, error) {
 	res, err := graphql.UnmarshalFloatContext(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5484,7 +6643,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNLocation2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐLocation(ctx context.Context, sel ast.SelectionSet, v *Location) graphql.Marshaler {
+func (ec *executionContext) marshalNLocation2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐLocation(ctx context.Context, sel ast.SelectionSet, v *Location) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5494,7 +6653,7 @@ func (ec *executionContext) marshalNLocation2ᚖgithubᚗcomᚋdaichitsuchiyaᚋ
 	return ec._Location(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMenu2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenu(ctx context.Context, sel ast.SelectionSet, v *Menu) graphql.Marshaler {
+func (ec *executionContext) marshalNMenu2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenu(ctx context.Context, sel ast.SelectionSet, v *Menu) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5504,7 +6663,7 @@ func (ec *executionContext) marshalNMenu2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfood
 	return ec._Menu(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*MenuItem) graphql.Marshaler {
+func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*MenuItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5528,7 +6687,7 @@ func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋdaichitsuchiya
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNMenuItem2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNMenuItem2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5548,7 +6707,7 @@ func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋdaichitsuchiya
 	return ret
 }
 
-func (ec *executionContext) marshalNMenuItem2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItem(ctx context.Context, sel ast.SelectionSet, v *MenuItem) graphql.Marshaler {
+func (ec *executionContext) marshalNMenuItem2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMenuItem(ctx context.Context, sel ast.SelectionSet, v *MenuItem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5558,7 +6717,7 @@ func (ec *executionContext) marshalNMenuItem2ᚖgithubᚗcomᚋdaichitsuchiyaᚋ
 	return ec._MenuItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney(ctx context.Context, sel ast.SelectionSet, v *Money) graphql.Marshaler {
+func (ec *executionContext) marshalNMoney2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐMoney(ctx context.Context, sel ast.SelectionSet, v *Money) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5568,11 +6727,11 @@ func (ec *executionContext) marshalNMoney2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoo
 	return ec._Money(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNOrder2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v Order) graphql.Marshaler {
+func (ec *executionContext) marshalNOrder2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v Order) graphql.Marshaler {
 	return ec._Order(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNOrder2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ(ctx context.Context, sel ast.SelectionSet, v []*Order) graphql.Marshaler {
+func (ec *executionContext) marshalNOrder2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderᚄ(ctx context.Context, sel ast.SelectionSet, v []*Order) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5596,7 +6755,7 @@ func (ec *executionContext) marshalNOrder2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx, sel, v[i])
+			ret[i] = ec.marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5616,7 +6775,7 @@ func (ec *executionContext) marshalNOrder2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v *Order) graphql.Marshaler {
+func (ec *executionContext) marshalNOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v *Order) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5626,7 +6785,7 @@ func (ec *executionContext) marshalNOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoo
 	return ec._Order(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNOrderItem2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*OrderItem) graphql.Marshaler {
+func (ec *executionContext) marshalNOrderItem2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*OrderItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5650,7 +6809,7 @@ func (ec *executionContext) marshalNOrderItem2ᚕᚖgithubᚗcomᚋdaichitsuchiy
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNOrderItem2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNOrderItem2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5670,7 +6829,7 @@ func (ec *executionContext) marshalNOrderItem2ᚕᚖgithubᚗcomᚋdaichitsuchiy
 	return ret
 }
 
-func (ec *executionContext) marshalNOrderItem2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItem(ctx context.Context, sel ast.SelectionSet, v *OrderItem) graphql.Marshaler {
+func (ec *executionContext) marshalNOrderItem2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderItem(ctx context.Context, sel ast.SelectionSet, v *OrderItem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -5680,29 +6839,29 @@ func (ec *executionContext) marshalNOrderItem2ᚖgithubᚗcomᚋdaichitsuchiya�
 	return ec._OrderItem(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNOrderStatus2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus(ctx context.Context, v any) (OrderStatus, error) {
+func (ec *executionContext) unmarshalNOrderStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus(ctx context.Context, v any) (OrderStatus, error) {
 	var res OrderStatus
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNOrderStatus2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus(ctx context.Context, sel ast.SelectionSet, v OrderStatus) graphql.Marshaler {
+func (ec *executionContext) marshalNOrderStatus2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrderStatus(ctx context.Context, sel ast.SelectionSet, v OrderStatus) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) unmarshalNPlaceOrderInput2githubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderInput(ctx context.Context, v any) (PlaceOrderInput, error) {
+func (ec *executionContext) unmarshalNPlaceOrderInput2githubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderInput(ctx context.Context, v any) (PlaceOrderInput, error) {
 	res, err := ec.unmarshalInputPlaceOrderInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNPlaceOrderItemInput2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInputᚄ(ctx context.Context, v any) ([]*PlaceOrderItemInput, error) {
+func (ec *executionContext) unmarshalNPlaceOrderItemInput2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInputᚄ(ctx context.Context, v any) ([]*PlaceOrderItemInput, error) {
 	var vSlice []any
 	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]*PlaceOrderItemInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNPlaceOrderItemInput2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNPlaceOrderItemInput2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5710,12 +6869,12 @@ func (ec *executionContext) unmarshalNPlaceOrderItemInput2ᚕᚖgithubᚗcomᚋd
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNPlaceOrderItemInput2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInput(ctx context.Context, v any) (*PlaceOrderItemInput, error) {
+func (ec *executionContext) unmarshalNPlaceOrderItemInput2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐPlaceOrderItemInput(ctx context.Context, v any) (*PlaceOrderItemInput, error) {
 	res, err := ec.unmarshalInputPlaceOrderItemInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNRestaurant2ᚕᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurantᚄ(ctx context.Context, sel ast.SelectionSet, v []*Restaurant) graphql.Marshaler {
+func (ec *executionContext) marshalNRestaurant2ᚕᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurantᚄ(ctx context.Context, sel ast.SelectionSet, v []*Restaurant) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5739,7 +6898,7 @@ func (ec *executionContext) marshalNRestaurant2ᚕᚖgithubᚗcomᚋdaichitsuchi
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRestaurant2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx, sel, v[i])
+			ret[i] = ec.marshalNRestaurant2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5759,7 +6918,7 @@ func (ec *executionContext) marshalNRestaurant2ᚕᚖgithubᚗcomᚋdaichitsuchi
 	return ret
 }
 
-func (ec *executionContext) marshalNRestaurant2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx context.Context, sel ast.SelectionSet, v *Restaurant) graphql.Marshaler {
+func (ec *executionContext) marshalNRestaurant2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx context.Context, sel ast.SelectionSet, v *Restaurant) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
@@ -6086,6 +7245,20 @@ func (ec *executionContext) marshalODateTime2ᚖtimeᚐTime(ctx context.Context,
 	return res
 }
 
+func (ec *executionContext) marshalODeliveryAssignment2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDeliveryAssignment(ctx context.Context, sel ast.SelectionSet, v *DeliveryAssignment) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeliveryAssignment(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODriver2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐDriver(ctx context.Context, sel ast.SelectionSet, v *Driver) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Driver(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v any) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -6104,14 +7277,14 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v *Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐOrder(ctx context.Context, sel ast.SelectionSet, v *Order) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Order(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalORestaurant2ᚖgithubᚗcomᚋdaichitsuchiyaᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx context.Context, sel ast.SelectionSet, v *Restaurant) graphql.Marshaler {
+func (ec *executionContext) marshalORestaurant2ᚖgithubᚗcomᚋtsucchinokoᚋfoodᚑdeliveryᚑtrackerᚋinternalᚋinfrastructureᚋgraphqlᚋgeneratedᚐRestaurant(ctx context.Context, sel ast.SelectionSet, v *Restaurant) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

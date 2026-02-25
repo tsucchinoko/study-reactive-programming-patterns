@@ -2,12 +2,15 @@ import { useQuery } from "@apollo/client/react";
 import React from "react";
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { OrderStatusBadge } from "../components/OrderStatusBadge";
 import { StatusTimeline } from "../../../shared/components/StatusTimeline";
 import { useOrderStream } from "../hooks/useOrderStream";
@@ -16,8 +19,12 @@ import type { RootStackParamList } from "../../../navigation/AppNavigator";
 
 type Props = NativeStackScreenProps<RootStackParamList, "OrderDetail">;
 
+const TRACKABLE_STATUSES = ["READY", "PICKED_UP", "DELIVERING"];
+
 export function OrderDetailScreen({ route }: Props) {
   const { orderId } = route.params;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   // Initial data via query.
   const { data, loading, error } = useQuery<{ order: any }>(GET_ORDER, {
@@ -97,6 +104,18 @@ export function OrderDetailScreen({ route }: Props) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>キャンセル理由</Text>
           <Text style={styles.cancelReason}>{order.cancelReason}</Text>
+        </View>
+      )}
+
+      {/* Tracking Button */}
+      {TRACKABLE_STATUSES.includes(order.status) && (
+        <View style={styles.section}>
+          <Pressable
+            style={styles.trackingButton}
+            onPress={() => navigation.navigate("Tracking", { orderId })}
+          >
+            <Text style={styles.trackingButtonText}>配達追跡</Text>
+          </Pressable>
         </View>
       )}
     </ScrollView>
@@ -211,5 +230,16 @@ const styles = StyleSheet.create({
   cancelReason: {
     fontSize: 14,
     color: "#EF4444",
+  },
+  trackingButton: {
+    backgroundColor: "#8B5CF6",
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  trackingButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

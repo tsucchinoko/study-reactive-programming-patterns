@@ -10,6 +10,32 @@ import (
 	"time"
 )
 
+type DeliveryAssignment struct {
+	ID          string     `json:"id"`
+	OrderID     string     `json:"orderId"`
+	DriverID    string     `json:"driverId"`
+	Driver      *Driver    `json:"driver,omitempty"`
+	Status      string     `json:"status"`
+	AssignedAt  time.Time  `json:"assignedAt"`
+	PickedUpAt  *time.Time `json:"pickedUpAt,omitempty"`
+	DeliveredAt *time.Time `json:"deliveredAt,omitempty"`
+}
+
+type Driver struct {
+	ID              string       `json:"id"`
+	Name            string       `json:"name"`
+	Phone           string       `json:"phone"`
+	Status          DriverStatus `json:"status"`
+	CurrentLocation *Location    `json:"currentLocation"`
+}
+
+type DriverLocation struct {
+	DriverID  string    `json:"driverId"`
+	Latitude  float64   `json:"latitude"`
+	Longitude float64   `json:"longitude"`
+	Timestamp time.Time `json:"timestamp"`
+}
+
 type Location struct {
 	Lat     float64 `json:"lat"`
 	Lng     float64 `json:"lng"`
@@ -90,6 +116,65 @@ type Restaurant struct {
 }
 
 type Subscription struct {
+}
+
+type DriverStatus string
+
+const (
+	DriverStatusAvailable  DriverStatus = "AVAILABLE"
+	DriverStatusAssigned   DriverStatus = "ASSIGNED"
+	DriverStatusDelivering DriverStatus = "DELIVERING"
+	DriverStatusOffline    DriverStatus = "OFFLINE"
+)
+
+var AllDriverStatus = []DriverStatus{
+	DriverStatusAvailable,
+	DriverStatusAssigned,
+	DriverStatusDelivering,
+	DriverStatusOffline,
+}
+
+func (e DriverStatus) IsValid() bool {
+	switch e {
+	case DriverStatusAvailable, DriverStatusAssigned, DriverStatusDelivering, DriverStatusOffline:
+		return true
+	}
+	return false
+}
+
+func (e DriverStatus) String() string {
+	return string(e)
+}
+
+func (e *DriverStatus) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = DriverStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid DriverStatus", str)
+	}
+	return nil
+}
+
+func (e DriverStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *DriverStatus) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e DriverStatus) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 type OrderStatus string
