@@ -32,8 +32,8 @@ export function useObservable<T>(
   useEffect(() => {
     setState({ status: "loading" });
 
-    const observable = factory();
-    subscriptionRef.current = observable.subscribe({
+    const observable$ = factory();
+    subscriptionRef.current = observable$.subscribe({
       next: (data) => setState({ status: "success", data }),
       error: (error) => setState({ status: "error", error }),
     });
