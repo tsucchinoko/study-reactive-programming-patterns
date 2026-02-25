@@ -74,6 +74,41 @@ type Restaurant {
   isOpen: Boolean!
 }
 
+# --- Delivery types ---
+
+enum DriverStatus {
+  AVAILABLE
+  ASSIGNED
+  DELIVERING
+  OFFLINE
+}
+
+type Driver {
+  id: ID!
+  name: String!
+  phone: String!
+  status: DriverStatus!
+  currentLocation: Location!
+}
+
+type DeliveryAssignment {
+  id: ID!
+  orderId: ID!
+  driverId: ID!
+  driver: Driver
+  status: String!
+  assignedAt: DateTime!
+  pickedUpAt: DateTime
+  deliveredAt: DateTime
+}
+
+type DriverLocation {
+  driverId: ID!
+  latitude: Float!
+  longitude: Float!
+  timestamp: DateTime!
+}
+
 # --- Inputs ---
 
 input PlaceOrderItemInput {
@@ -98,6 +133,8 @@ type Query {
   ordersByStatus(status: OrderStatus!): [Order!]!
   restaurant(id: ID!): Restaurant
   restaurants: [Restaurant!]!
+  driver(id: ID!): Driver
+  deliveryByOrder(orderId: ID!): DeliveryAssignment
 }
 
 # --- Mutations ---
@@ -109,8 +146,9 @@ type Mutation {
   transitionOrder(orderId: ID!, newStatus: OrderStatus!): Order!
 }
 
-# --- Subscriptions (Phase 2) ---
+# --- Subscriptions ---
 
 type Subscription {
   orderStatusChanged(orderId: ID!): Order!
+  driverLocationUpdated(driverId: ID!): DriverLocation!
 }

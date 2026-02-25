@@ -3,6 +3,7 @@ package graphql
 import (
 	"time"
 
+	deliverydomain "github.com/tsucchinoko/food-delivery-tracker/internal/delivery/domain"
 	"github.com/tsucchinoko/food-delivery-tracker/internal/infrastructure/graphql/generated"
 	orderdomain "github.com/tsucchinoko/food-delivery-tracker/internal/order/domain"
 	restaurantdomain "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/domain"
@@ -81,6 +82,48 @@ func toGQLRestaurants(restaurants []restaurantdomain.Restaurant) []*generated.Re
 	return fp.Map(restaurants, func(r restaurantdomain.Restaurant) *generated.Restaurant {
 		return toGQLRestaurant(r)
 	})
+}
+
+// --- 配達マッピング (domain → GraphQL) ---
+
+func toGQLDriver(d deliverydomain.Driver) *generated.Driver {
+	return &generated.Driver{
+		ID:    d.ID().String(),
+		Name:  d.Name(),
+		Phone: d.Phone(),
+		Status: generated.DriverStatus(d.Status()),
+		CurrentLocation: &generated.Location{
+			Lat:     d.CurrentLocation().Lat(),
+			Lng:     d.CurrentLocation().Lng(),
+			Address: "", // ドライバーの位置にはアドレスなし
+		},
+	}
+}
+
+func toGQLAssignment(a deliverydomain.DeliveryAssignment, driver *deliverydomain.Driver) *generated.DeliveryAssignment {
+	result := &generated.DeliveryAssignment{
+		ID:         a.ID().String(),
+		OrderID:    a.OrderID().String(),
+		DriverID:   a.DriverID().String(),
+		Status:     string(a.Status()),
+		AssignedAt: a.AssignedAt().Time(),
+		PickedUpAt: optionTimeToPtr(a.PickedUpAt()),
+		DeliveredAt: optionTimeToPtr(a.DeliveredAt()),
+	}
+	if driver != nil {
+		result.Driver = toGQLDriver(*driver)
+	}
+	return result
+}
+
+// ToGQLDriverLocation はドライバー位置イベントをGraphQL型に変換する。
+func ToGQLDriverLocation(driverID string, lat, lng float64, timestamp time.Time) *generated.DriverLocation {
+	return &generated.DriverLocation{
+		DriverID:  driverID,
+		Latitude:  lat,
+		Longitude: lng,
+		Timestamp: timestamp,
+	}
 }
 
 // --- 共通マッピング ---

@@ -1,6 +1,7 @@
 package graphql
 
 import (
+	deliveryapp "github.com/tsucchinoko/food-delivery-tracker/internal/delivery/application"
 	orderapp "github.com/tsucchinoko/food-delivery-tracker/internal/order/application"
 	restaurantapp "github.com/tsucchinoko/food-delivery-tracker/internal/restaurant/application"
 )
@@ -9,5 +10,6 @@ import (
 type Resolver struct {
 	OrderService      *orderapp.OrderService
 	RestaurantService *restaurantapp.RestaurantService
+	DeliveryService   *deliveryapp.DeliveryService
 	SubscriptionMgr   *SubscriptionManager
 }
