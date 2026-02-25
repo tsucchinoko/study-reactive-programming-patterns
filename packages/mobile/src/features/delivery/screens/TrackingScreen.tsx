@@ -10,6 +10,7 @@ import {
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { OrderStatusBadge } from "../../order/components/OrderStatusBadge";
 import { StatusTimeline } from "../../../shared/components/StatusTimeline";
+import { DeliveryMap } from "../components/DeliveryMap";
 import { useOrderStream } from "../../order/hooks/useOrderStream";
 import { useDriverLocation } from "../hooks/useDriverLocation";
 import { GET_ORDER } from "../../order/graphql/operations";
@@ -104,34 +105,14 @@ export function TrackingScreen({ route }: Props) {
         </View>
       )}
 
-      {/* ドライバー位置 (リアルタイム) */}
+      {/* ドライバー位置 (リアルタイム地図) */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>配達員の位置</Text>
         {driverLocation.status === "success" && driverLocation.data ? (
-          <View style={styles.locationCard}>
-            <View style={styles.locationLiveIndicator}>
-              <View style={styles.locationLiveDot} />
-              <Text style={styles.locationLiveText}>リアルタイム追跡中</Text>
-            </View>
-            <View style={styles.coordRow}>
-              <Text style={styles.coordLabel}>緯度</Text>
-              <Text style={styles.coordValue}>
-                {driverLocation.data.latitude.toFixed(6)}
-              </Text>
-            </View>
-            <View style={styles.coordRow}>
-              <Text style={styles.coordLabel}>経度</Text>
-              <Text style={styles.coordValue}>
-                {driverLocation.data.longitude.toFixed(6)}
-              </Text>
-            </View>
-            <Text style={styles.timestampText}>
-              最終更新:{" "}
-              {new Date(driverLocation.data.timestamp).toLocaleTimeString(
-                "ja-JP",
-              )}
-            </Text>
-          </View>
+          <DeliveryMap
+            driverLocation={driverLocation.data}
+            driverName={driver?.name}
+          />
         ) : driverLocation.status === "loading" ? (
           <View style={styles.locationWaiting}>
             <ActivityIndicator size="small" color="#8B5CF6" />
@@ -306,50 +287,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#9CA3AF",
     marginLeft: 8,
-  },
-  // 位置カード
-  locationCard: {
-    backgroundColor: "#F5F3FF",
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-  },
-  locationLiveIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 4,
-  },
-  locationLiveDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#8B5CF6",
-    marginRight: 6,
-  },
-  locationLiveText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#8B5CF6",
-  },
-  coordRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  coordLabel: {
-    fontSize: 13,
-    color: "#6B7280",
-  },
-  coordValue: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#1F2937",
-    fontVariant: ["tabular-nums"],
-  },
-  timestampText: {
-    fontSize: 11,
-    color: "#9CA3AF",
-    marginTop: 4,
   },
   locationWaiting: {
     flexDirection: "row",
